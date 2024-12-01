@@ -1,11 +1,12 @@
 from pathlib import Path
 
-from aoc import utils
+from aoc import (
+    utils,
+    PuzzleName,
+)
 
 
-def get_input_values() -> tuple[list[int], list[int]]:
-    file_name = f"{Path(__file__).stem}.txt"
-    file_path = utils.Locations.get_input_file(file_name)
+def get_input_values(file_path: Path) -> tuple[list[int], list[int]]:
     values_left = []
     values_right = []
     with open(file_path, 'r') as file:
@@ -51,12 +52,22 @@ def process(values: tuple[list[int], list[int]]) -> list[int]:
     return distances
 
 
-def main():
-    input_values = get_input_values()
+def main(file_path: Path | None = None):
+    file_path = file_path or utils.Dir.build_file_path(
+        utils.Dir.INPUT,
+        puzzle_name=PuzzleName(
+            day=1,
+            part=1,
+        )
+    )
+
+    input_values = get_input_values(file_path)
     distances = process(input_values)
     result = sum(distances)
-    print(result)
+
+    return result
 
 
 if __name__ == "__main__":
-    main()
+    RESULT = main()
+    print(f"Result: {RESULT}")
