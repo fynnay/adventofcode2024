@@ -14,7 +14,7 @@ class PuzzleName:
         """
         Builds a PuzzleName from the given text
         """
-        pattern = re.compile(r"(?P<base>\w+)_(?P<day>\d+)_(?P<part>\d+)")
+        pattern = re.compile(rf"(?P<base>[^_]+)(?P<delimiter>[\W_])(?P<day>\d+)([\W_])(?P<part>\d+)")
         match = pattern.match(text)
         if not match:
             raise ValueError(f"Failed to get PuzzleName from '{text}'")
@@ -22,11 +22,13 @@ class PuzzleName:
         base = match.group("base")
         day = int(match.group("day"))
         part = int(match.group("part"))
+        delimiter = match.group("delimiter")
 
         return cls(
             base=base,
             day=day,
             part=part,
+            delimiter=delimiter,
         )
 
     def build(self) -> str:

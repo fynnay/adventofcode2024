@@ -16,6 +16,23 @@ import aoc
                 base="aoc",
             )
         ],
+        [
+            "xmas_02_2",
+            aoc.PuzzleName(
+                day=2,
+                part=2,
+                base="xmas",
+            )
+        ],
+        [
+            "santa-123-0",
+            aoc.PuzzleName(
+                day=123,
+                part=0,
+                base="santa",
+                delimiter="-",
+            )
+        ],
     ]
 )
 def test_parse(input_value, expected_result):
