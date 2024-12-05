@@ -1,8 +1,8 @@
 from pathlib import Path
 
 from aoc import (
-    utils,
     PuzzleName,
+    Dir,
 )
 
 
@@ -53,8 +53,8 @@ def process(values: tuple[list[int], list[int]]) -> list[int]:
 
 
 def main(file_path: Path | None = None):
-    file_path = file_path or utils.Dir.build_file_path(
-        utils.Dir.INPUT,
+    file_path = file_path or Dir.build_file_path(
+        Dir.INPUT,
         puzzle_name=PuzzleName(
             day=1,
             part=1,

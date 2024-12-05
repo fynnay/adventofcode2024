@@ -1,19 +1,20 @@
 import sys
 from importlib import util
+
 import aoc
 
 
-def test_day01_1():
+def test_day03_1():
     puzzle_name = aoc.PuzzleName(
-        day=1,
+        day=3,
         part=1,
     )
     puzzle_name_text = puzzle_name.build()
     input_file = aoc.Dir.build_file_path(
-        aoc.Dir.INPUT,
+        aoc.directory.Dir.INPUT,
         puzzle_name,
     )
-    python_file = aoc.Dir.build_file_path(
+    python_file = aoc.directory.Dir.build_file_path(
         aoc.Dir.SCRIPT,
         puzzle_name,
     )
@@ -23,6 +24,4 @@ def test_day01_1():
     spec.loader.exec_module(module)
 
     result = module.main(input_file)
-    correct_result = 1873376
-
-    assert result == correct_result
+    assert result == 190604937

@@ -2,8 +2,8 @@ from pathlib import Path
 from typing import List, Tuple
 
 from aoc import (
-    utils,
     PuzzleName,
+    Dir,
 )
 
 
@@ -68,8 +68,8 @@ def process_reports(reports: List[List[int]]) -> Tuple[List[int], List[int], Lis
 def main(file_path: Path | None = None):
     script_path = Path(__file__)
     puzzle_name = PuzzleName.parse(script_path.stem)
-    file_path = file_path or utils.Dir.build_file_path(
-        utils.Dir.INPUT,
+    file_path = file_path or Dir.build_file_path(
+        Dir.INPUT,
         puzzle_name=PuzzleName(
             day=puzzle_name.day,
             part=puzzle_name.part,

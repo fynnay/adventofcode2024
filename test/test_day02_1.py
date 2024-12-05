@@ -9,12 +9,12 @@ def test_day01_1():
         part=1,
     )
     puzzle_name_text = puzzle_name.build()
-    input_file = aoc.utils.Dir.build_file_path(
-        aoc.utils.Dir.INPUT,
+    input_file = aoc.Dir.build_file_path(
+        aoc.directory.Dir.INPUT,
         puzzle_name,
     )
-    python_file = aoc.utils.Dir.build_file_path(
-        aoc.utils.Dir.SCRIPT,
+    python_file = aoc.directory.Dir.build_file_path(
+        aoc.Dir.SCRIPT,
         puzzle_name,
     )
     spec = util.spec_from_file_location(puzzle_name_text, python_file)
