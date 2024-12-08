@@ -143,4 +143,4 @@ def test_main():
     spec.loader.exec_module(module)
 
     result = module.main(input_file)
-    assert result == None
+    assert result == 2500
