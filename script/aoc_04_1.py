@@ -1,12 +1,15 @@
+from enum import Flag, IntFlag, IntEnum, Enum
 from pathlib import Path
 from typing import List, Tuple
 
 from aoc import PuzzleName, Dir
 
 
-def get_next_indices(index_current: int,
-                     index_min: int,
-                     index_max: int) -> Tuple[int | None, int | None]:
+def get_next_indices(
+        index_current: int,
+        index_min: int,
+        index_max: int
+) -> Tuple[int | None, int | None]:
     """
     Returns previous and next index given a range
     Args:
@@ -33,26 +36,53 @@ def get_cross_section(
         pos: Tuple[int, int],
         vector: Tuple[int, int],
         length: int
-        ) -> str:
+) -> str:
     cross_section = ""
     x, y = pos
 
     for _ in range(length):
+        if x < 0 or y < 0:
+            break
         try:
             entry = matrix[y][x]
         except IndexError:
             break
-        cross_section += entry
         x += vector[0]
-        y -= vector[1]
+        y += vector[1]
+        cross_section += entry
 
     return cross_section
 
 
-def process(lines: List[str],
-            word: str = "XMAS") -> Tuple[List[str], int]:
+class VECTOR(Enum):
+    HORIZONTAL = (1, 0)
+    VERTICAL = (0, 1)
+    DIAGONAL_RIGHT = (1, 1)
+    DIAGONAL_LEFT = (-1, 1)
+
+
+def get_cross_sections(matrix: List[str], pos: Tuple[int, int], length: int) -> List[str]:
+    cross_sections = []
+    for vector in VECTOR:
+        cross_section = get_cross_section(
+            matrix,
+            pos,
+            vector.value,
+            length,
+        )
+        if len(cross_section) < length:
+            continue
+        cross_sections.append(cross_section)
+
+    return cross_sections
+
+
+def count_occurrences(
+        lines: List[str],
+        word: str = "XMAS"
+) -> int:
     """
-    Finds `word` occurrences in `lines`: horizontally, vertically, diagonally
+    Finds `word` occurrences in `lines`: horizontally, vertically, diagonally, forwards and backwards
 
     Args:
         lines: The lines of text to search in
@@ -62,21 +92,27 @@ def process(lines: List[str],
         Tuple[List of strings with only `word` characters, number of `word` occurrences]
     """
     lines_processed = []
-    occurrence_count = 0
+    occurrences = 0
 
-    for index_line, line in enumerate(lines):
-        for index_char, char in enumerate(line):
-            index_word = word.index(char)
+    for vector in VECTOR:
+        print(f"vec: {vector}")
+        for index_line, line in enumerate(lines):
+            for index_char, char in enumerate(line):
+                cross_section = get_cross_section(
+                    lines,
+                    (index_char, index_line),
+                    vector.value,
+                    len(word),
+                )
+                if cross_section in [word, word[::-1]]:
+                    occurrences += 1
 
-            # Skip if character not in word
-            if not 0 < index_word < len(word) - 1:
-                continue
-            print(char, index_word)
-
-    return lines_processed, occurrence_count
+    return occurrences
 
 
-def main(file_path: Path = None):
+def main(
+        file_path: Path = None
+        ):
     script_path = Path(__file__)
     puzzle_name = PuzzleName.parse(script_path.stem)
     file_path = file_path or Dir.build_file_path(
@@ -90,9 +126,8 @@ def main(file_path: Path = None):
     with open(file_path, 'r') as fil:
         lines = fil.readlines()
 
-    processed_lines = process(lines)
-    result = ""
-    return result
+    occurrences = count_occurrences(lines)
+    return occurrences
 
 
 if __name__ == "__main__":
