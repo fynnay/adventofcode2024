@@ -1,6 +1,7 @@
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Tuple, List, Dict
+from typing import List
 
 from aoc import PuzzleName, Dir
 
@@ -10,64 +11,105 @@ class InputType(Enum):
     UPDATES = "updates"
 
 
-def get_puzzle_input(file_path: Path) -> Dict[InputType, List[List[str]]]:
+@dataclass
+class PuzzleInput:
+    rules: List[List[int]]
+    updates: List[List[int]]
+
+    def __post_init__(self):
+        self.rules = [[int(a), int(b)] for a, b in self.rules]
+        self.updates = [[int(a) for a in _] for _ in self.updates]
+
+
+def get_puzzle_input(file_path: Path) -> PuzzleInput:
     inputs = {
         InputType.PAGE_ORDERING_RULES: [],
         InputType.UPDATES: []
     }
+
     with open(file_path, 'r') as fil:
-        lines = fil.readlines()
+        lines = fil.read()
+
+        # Beginning of file contains the rules
         target = InputType.PAGE_ORDERING_RULES
         for _ in lines:
+            # After an empty line, the updates section starts
             if _ == "\n":
                 target = InputType.UPDATES
+
+            line_sanitized = _.strip("\n").strip(" ")
             if target is InputType.PAGE_ORDERING_RULES:
-                value = _.strip("\n").split("|")
+                values = line_sanitized.split("|")
             elif target is InputType.UPDATES:
-                value = _.strip("\n").split(",")
+                values = line_sanitized.split(",")
 
-            inputs[target].append(value)
+            values_sanitized = [_ for _ in values if _]
+            if not values_sanitized:
+                continue
+            inputs[target].append(values_sanitized)
 
-    return inputs
+    puzzle_input = PuzzleInput(
+        rules=inputs[InputType.PAGE_ORDERING_RULES],
+        updates=inputs[InputType.UPDATES],
+    )
+
+    return puzzle_input
 
 
 def is_updated_ordered(rules: List[List[str]], update: List[str]) -> bool:
+    """
+    Returns True if the `update` is ordered according to the rules, otherwise False.
+    Each rule contains exactly 2 numbers.
+    Rules, whose numbers don't all occur in the update are skipped.
+    All applicable rules' numbers must appear in the same order in the update to be valid.
+    """
 
     for rule in rules:
-        index_1 = 0
-        index_2 = 0
+        indexes: List[int] = []
 
         for entry in rule:
             if entry not in update:
+                # 1[...
                 break
             # Apply this rule if
-            # Pass: If numbers occur in the correct order
+            # Pass: If the entry occurs in the same order as in the rule
             # Fail: If numbers are in incorrect order
-            index_1 = update.index(entry)
-            index_2 = update.index(entry)
+            rule_index = update.index(entry)
+            indexes.append(rule_index)
         else:
-            continue
+            # Fail: If index do not appear in sequential order
+            indexes_sorted = sorted(indexes)
+            if not indexes_sorted == indexes:
+                # break 2[ ...
+                break
 
-        if index_1 < index_2:
-            pass
-
-        # Skip this rule if an entry does not occur in the update
+        # ...]1 to skip this rule if an entry does not occur in the update
         continue
     else:
         # All rules passed
         return True
 
-    # Failed a rule
+    # ...]2 Failed a rule
     return False
 
 
-def process(puzzle_input: Dict[InputType, List[List[str]]]):
-    rules = puzzle_input[InputType.PAGE_ORDERING_RULES]
-    updates = puzzle_input[InputType.UPDATES]
+def process(puzzle_input: PuzzleInput) -> int:
+    """
+    Returns the sum of all correctly ordered updates' middle entry
+    """
+    middle_entries = []
 
-    for update in updates:
-        is_ordered = False
+    for update in puzzle_input.updates:
+        is_ordered = is_updated_ordered(puzzle_input.rules, update)
+        if not is_ordered:
+            continue
 
+        middle_index = len(update) // 2
+        middle_entry = update[middle_index]
+        middle_entries.append(middle_entry)
+
+    numbers = [int(_) for _ in middle_entries]
+    return sum(numbers)
 
 
 def main(
@@ -85,7 +127,7 @@ def main(
 
     puzzle_input = get_puzzle_input(file_path)
     result = process(puzzle_input)
-    return
+    return result
 
 
 if __name__ == "__main__":
