@@ -10,6 +10,44 @@ class PuzzleInput:
     rules: List[List[int]]
     updates: List[List[int]]
 
+    def is_update_ordered(
+            self,
+            update: list[int],
+    ) -> bool:
+        """
+        Returns True if the `update` is ordered according to the rules, otherwise False.
+        Each rule contains exactly 2 numbers.
+        Rules, whose numbers don't all occur in the update are skipped.
+        All applicable rules' numbers must appear in the same order in the update to be valid.
+        """
+        for rule in self.rules:
+            indexes: list[int] = []
+
+            for entry in rule:
+                if entry not in update:
+                    # 1...
+                    break
+                # Apply this rule if
+                # Pass: If the entry occurs in the same order as in the rule
+                # Fail: If numbers are in incorrect order
+                rule_index = update.index(entry)
+                indexes.append(rule_index)
+            else:
+                # Fail: If index do not appear in sequential order
+                indexes_sorted = sorted(indexes)
+                if not indexes_sorted == indexes:
+                    # break 2...
+                    break
+
+            # ...1 to skip this rule if an entry does not occur in the update
+            continue
+        else:
+            # All rules passed
+            return True
+
+        # ...2 Failed a rule
+        return False
+
 
 def get_puzzle_input(file_path: Path) -> PuzzleInput:
     # Read file content
@@ -39,43 +77,6 @@ def get_puzzle_input(file_path: Path) -> PuzzleInput:
     return puzzle_input
 
 
-def is_updated_ordered(rules: List[List[str]], update: List[str]) -> bool:
-    """
-    Returns True if the `update` is ordered according to the rules, otherwise False.
-    Each rule contains exactly 2 numbers.
-    Rules, whose numbers don't all occur in the update are skipped.
-    All applicable rules' numbers must appear in the same order in the update to be valid.
-    """
-
-    for rule in rules:
-        indexes: List[int] = []
-
-        for entry in rule:
-            if entry not in update:
-                # 1[...
-                break
-            # Apply this rule if
-            # Pass: If the entry occurs in the same order as in the rule
-            # Fail: If numbers are in incorrect order
-            rule_index = update.index(entry)
-            indexes.append(rule_index)
-        else:
-            # Fail: If index do not appear in sequential order
-            indexes_sorted = sorted(indexes)
-            if not indexes_sorted == indexes:
-                # break 2[ ...
-                break
-
-        # ...]1 to skip this rule if an entry does not occur in the update
-        continue
-    else:
-        # All rules passed
-        return True
-
-    # ...]2 Failed a rule
-    return False
-
-
 def process(puzzle_input: PuzzleInput) -> int:
     """
     Returns the sum of all correctly ordered updates' middle entry
@@ -83,7 +84,7 @@ def process(puzzle_input: PuzzleInput) -> int:
     middle_entries = []
 
     for update in puzzle_input.updates:
-        is_ordered = is_updated_ordered(puzzle_input.rules, update)
+        is_ordered = puzzle_input.is_update_ordered(update)
         if not is_ordered:
             continue
 
@@ -114,4 +115,4 @@ def main(
 
 
 if __name__ == "__main__":
-    main()
+    print(f"Result: {main()}")
