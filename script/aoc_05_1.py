@@ -55,19 +55,27 @@ def get_puzzle_input(file_path: Path) -> PuzzleInput:
         lines = fil.read()
 
     # File contains rules first and then updates
-    lines_rules, lines_updates = lines.split("\n\n")
+    rules_raw, updates_raw = lines.split("\n\n")
+    rules_lines = rules_raw.split("\n")
+    updates_lines = updates_raw.split("\n")
     rules = []
     updates = []
 
-    for line in lines_rules:
+    for line in rules_lines:
         line_sanitized = line.strip("\n").strip(" ")
         values = line_sanitized.split("|")
-        rules = [int(_) for _ in values if _]
+        numbers = [int(_) for _ in values if _]
+        if not numbers:
+            continue
+        rules.append(numbers)
 
-    for line in lines_updates:
+    for line in updates_lines:
         line_sanitized = line.strip("\n").strip(" ")
         values = line_sanitized.split(",")
-        updates = [_ for _ in values if _]
+        numbers = [int(_) for _ in values if _]
+        if not numbers:
+            continue
+        updates.append(numbers)
 
     puzzle_input = PuzzleInput(
         rules=rules,
@@ -85,6 +93,7 @@ def process(puzzle_input: PuzzleInput) -> int:
 
     for update in puzzle_input.updates:
         is_ordered = puzzle_input.is_update_ordered(update)
+
         if not is_ordered:
             continue
 
