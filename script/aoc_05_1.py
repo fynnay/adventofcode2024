@@ -1,14 +1,8 @@
 from dataclasses import dataclass
-from enum import Enum
 from pathlib import Path
 from typing import List
 
 from aoc import PuzzleName, Dir
-
-
-class InputType(Enum):
-    PAGE_ORDERING_RULES = "page orgering rules"
-    UPDATES = "updates"
 
 
 @dataclass
@@ -16,41 +10,30 @@ class PuzzleInput:
     rules: List[List[int]]
     updates: List[List[int]]
 
-    def __post_init__(self):
-        self.rules = [[int(a), int(b)] for a, b in self.rules]
-        self.updates = [[int(a) for a in _] for _ in self.updates]
-
 
 def get_puzzle_input(file_path: Path) -> PuzzleInput:
-    inputs = {
-        InputType.PAGE_ORDERING_RULES: [],
-        InputType.UPDATES: []
-    }
-
+    # Read file content
     with open(file_path, 'r') as fil:
         lines = fil.read()
 
-        # Beginning of file contains the rules
-        target = InputType.PAGE_ORDERING_RULES
-        for _ in lines:
-            # After an empty line, the updates section starts
-            if _ == "\n":
-                target = InputType.UPDATES
+    # File contains rules first and then updates
+    lines_rules, lines_updates = lines.split("\n\n")
+    rules = []
+    updates = []
 
-            line_sanitized = _.strip("\n").strip(" ")
-            if target is InputType.PAGE_ORDERING_RULES:
-                values = line_sanitized.split("|")
-            elif target is InputType.UPDATES:
-                values = line_sanitized.split(",")
+    for line in lines_rules:
+        line_sanitized = line.strip("\n").strip(" ")
+        values = line_sanitized.split("|")
+        rules = [int(_) for _ in values if _]
 
-            values_sanitized = [_ for _ in values if _]
-            if not values_sanitized:
-                continue
-            inputs[target].append(values_sanitized)
+    for line in lines_updates:
+        line_sanitized = line.strip("\n").strip(" ")
+        values = line_sanitized.split(",")
+        updates = [_ for _ in values if _]
 
     puzzle_input = PuzzleInput(
-        rules=inputs[InputType.PAGE_ORDERING_RULES],
-        updates=inputs[InputType.UPDATES],
+        rules=rules,
+        updates=updates,
     )
 
     return puzzle_input
