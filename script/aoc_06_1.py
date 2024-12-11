@@ -10,6 +10,21 @@ from aoc import (
 )
 
 
+# def rotate(vector: tuple[int, int], direction: 0 or 1):
+#     """
+#     Returns new vector from rotating the specified one by 90 degrees
+#
+#     Args:
+#         vector:
+#         direction: 0 for counterclockwise, 1 for clockwise
+#
+#     Returns:
+#
+#     """
+#     shifted = [vector[1], vector[0]]
+#     return rotated
+
+
 def get_puzzle_input(file_path: Path) -> list[list[str]]:
     values_y = []
 

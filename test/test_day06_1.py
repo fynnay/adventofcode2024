@@ -1,4 +1,3 @@
-import math
 import sys
 from importlib import util
 
@@ -15,13 +14,24 @@ def guard() -> tuple[tuple[int, int], tuple[int, int]]:
         (pos, dir)
         ((x, y), (x, y))
     """
-    return ((1, 1), (1, 1))
+    return (1, 1), (1, 0)
 
 
-def test_rotate(guard):
-    pos, direction = guard
-    rotated = math.sin(direction)
-
+@pytest.mark.parametrize(
+    ["vector", "expected"],
+    [
+        [(1, 0), (0, 1)],
+        [(0, 1), (-1, 0)],
+        [(-1, 0), (0, -1)],
+        [(0, -1), (1, 0)],
+    ]
+)
+def test_rotate(vector: tuple[int, int], expected: tuple[int, int]):
+    """
+    Rotate the incoming vector to the right by 90 degrees
+    """
+    rotated = (-vector[1], vector[0])
+    assert rotated == expected
 
 
 def test_main():
