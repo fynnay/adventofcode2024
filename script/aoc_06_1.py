@@ -1,4 +1,8 @@
+"""
+Predict the path of the guard. How many distinct positions will the guard visit before leaving the mapped area?
+"""
 from pathlib import Path
+from math import sin, cos
 
 from aoc import (
     PuzzleName,
@@ -6,15 +10,78 @@ from aoc import (
 )
 
 
-def get_input_values(file_path: Path):
-    values = []
+def get_puzzle_input(file_path: Path) -> list[list[str]]:
+    values_y = []
 
     with open(file_path, 'r') as file:
         for line in file.readlines():
             if not line:
                 continue
+            values_x = []
+            for entry in line:
+                entry_sanitized = entry.strip("\n").strip("")
+                if not entry_sanitized:
+                    continue
+                values_x.append(entry_sanitized)
+            values_y.append(values_x)
 
-    return values
+    return values_y
+
+
+def get_guard(puzzle_input: list[list[str]]) -> tuple[tuple[int, int], tuple[int, int]]:
+    for index_y, line in enumerate(puzzle_input):
+        for index_x, entry in enumerate(line):
+            if entry in ["<", ">", "^", "v"]:
+                return (index_x, index_y), get_dir(entry)
+
+
+def get_dir(symbol: str) -> tuple[int, int]:
+    lookup_x_dir = {
+        "<": -1,
+        ">": +1,
+    }
+    lookup_y_dir = {
+        "^": -1,
+        "v": +1,
+    }
+    return (
+        lookup_x_dir.get(symbol, 0),
+        lookup_y_dir.get(symbol, 0),
+    )
+
+
+def process(puzzle_input: list[list[str]]) -> int:
+    guard_pos, guard_dir = get_guard(puzzle_input)
+
+    max_y: int = len(puzzle_input)
+    max_x: int = len(puzzle_input[0])
+    visited: set[tuple[int, int]] = {guard_pos}
+    steps: int = 0
+
+    while True:
+        guard_pos = (
+            guard_pos[0] + guard_dir[0],
+            guard_pos[1] + guard_dir[1],
+        )
+        x, y = guard_pos
+
+        # Stop when guard exists
+        if not 0 < x < max_x:
+            break
+        if not 0 < y < max_y:
+            break
+
+        # Change direction if meeting an obstacle
+        entry = puzzle_input[y][x]
+        if entry == "#":
+            guard_dir = (_ for _ in guard_dir)
+
+
+        steps += 1
+
+        break
+
+    return steps
 
 
 def main(file_path: Path | None = None):
@@ -27,7 +94,9 @@ def main(file_path: Path | None = None):
             part=puzzle_name.part,
         )
     )
-    result = "I am result"
+
+    puzzle_input = get_puzzle_input(file_path)
+    result = process(puzzle_input)
     return result
 
 

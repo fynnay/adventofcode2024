@@ -1,3 +1,4 @@
+import math
 import sys
 from importlib import util
 
@@ -6,8 +7,21 @@ import aoc
 
 
 @pytest.fixture
-def something():
-    return
+def guard() -> tuple[tuple[int, int], tuple[int, int]]:
+    """
+    Returns guard's position and direction
+
+    Returns:
+        (pos, dir)
+        ((x, y), (x, y))
+    """
+    return ((1, 1), (1, 1))
+
+
+def test_rotate(guard):
+    pos, direction = guard
+    rotated = math.sin(direction)
+
 
 
 def test_main():
