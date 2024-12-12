@@ -85,8 +85,7 @@ def process(puzzle_input: list[list[str]]) -> list[tuple[int, int, str]]:
     Returns:
         A list of positions the guard visits in the puzzle_input
     """
-    max_y: int = len(puzzle_input)
-    max_x: int = len(puzzle_input[0])  # Assuming all lines are the same length
+    # Find initial guard position and vector
     pos, vec = get_guard(puzzle_input)
     guard_route: list[tuple[int, int, str]] = []
 
@@ -102,7 +101,7 @@ def process(puzzle_input: list[list[str]]) -> list[tuple[int, int, str]]:
             try:
                 entry_next = get_entry(puzzle_input, next_pos)
             except IndexError:
-                # Clear position to indicate it's off the map
+                # Clear position to indicate it's off the map...
                 pos = None
                 break
             if entry_next == "#":
@@ -111,7 +110,7 @@ def process(puzzle_input: list[list[str]]) -> list[tuple[int, int, str]]:
                 pos = next_pos
                 break
 
-        # Stop when guard is not within area
+        # ...stop when next field would be off the map
         if pos is None:
             break
 
