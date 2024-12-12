@@ -102,7 +102,8 @@ def process(puzzle_input: list[list[str]]) -> list[tuple[int, int, str]]:
             try:
                 entry_next = get_entry(puzzle_input, next_pos)
             except IndexError:
-                pos = next_pos
+                # Clear position to indicate it's off the map
+                pos = None
                 break
             if entry_next == "#":
                 vec = rotate(vec, 1)
@@ -111,7 +112,7 @@ def process(puzzle_input: list[list[str]]) -> list[tuple[int, int, str]]:
                 break
 
         # Stop when guard is not within area
-        if not 0 <= pos[0] < max_x or not 0 <= pos[1] < max_y:
+        if pos is None:
             break
 
     return guard_route
