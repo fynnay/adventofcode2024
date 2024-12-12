@@ -88,14 +88,12 @@ def process(puzzle_input: list[list[str]]) -> list[tuple[int, int, str]]:
     max_y: int = len(puzzle_input)
     max_x: int = len(puzzle_input[0])  # Assuming all lines are the same length
     pos, vec = get_guard(puzzle_input)
-    x, y = pos
     guard_route: list[tuple[int, int, str]] = []
 
     while True:
         entry = get_entry(puzzle_input, pos)
         # Register position
         guard_route.append((pos[0], pos[1], entry))
-        next_pos = pos
 
         while True:
             # Get next step
