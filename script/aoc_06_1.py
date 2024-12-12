@@ -11,7 +11,7 @@ from aoc import (
 
 def rotate(vector: tuple[int, int], direction: 0 or 1) -> tuple[int, int]:
     """
-    Returns new vector from rotating the specified one by 90 degrees
+    Returns `vector` as a new vector, rotated by 90 degrees in `direction`
 
     Args:
         vector: The vector to be rotated
@@ -44,17 +44,26 @@ def get_guard(puzzle_input: list[list[str]]) -> tuple[tuple[int, int], tuple[int
     for index_y, line in enumerate(puzzle_input):
         for index_x, entry in enumerate(line):
             if entry in ["<", ">", "^", "v"]:
-                return (index_x, index_y), get_dir(entry)
+                return (index_x, index_y), get_vector(entry)
 
 
-def get_dir(symbol: str) -> tuple[int, int]:
+def get_vector(symbol: str) -> tuple[int, int]:
+    """
+    Returns a 2D vector given the `symbol`
+
+    Args:
+        symbol: One of `<,>,^,v` indicating the vector's direction
+
+    Returns:
+        [int, int] 2D vector
+    """
     lookup_x_dir = {
         "<": -1,
         ">": +1,
     }
     lookup_y_dir = {
-        "^": -1,
-        "v": +1,
+        "^": +1,
+        "v": -1,
     }
     return (
         lookup_x_dir.get(symbol, 0),
@@ -62,38 +71,46 @@ def get_dir(symbol: str) -> tuple[int, int]:
     )
 
 
-def process(puzzle_input: list[list[str]]) -> int:
-    guard_pos, guard_dir = get_guard(puzzle_input)
+def get_entry(puzzle_input: list[list[str]], pos: tuple[int, int]):
+    return puzzle_input[pos[1]][pos[0]]
 
+
+def process(puzzle_input: list[list[str]]) -> list[tuple[int, int, str]]:
+    """
+    Returns the route that the guard walks - duplicate fields included
+
+    Args:
+        puzzle_input: The "room" the guard is walking in.
+
+    Returns:
+        A list of positions the guard visits in the puzzle_input
+    """
     max_y: int = len(puzzle_input)
-    max_x: int = len(puzzle_input[0])
-    visited: set[tuple[int, int]] = {guard_pos}
-    steps: int = 0
+    max_x: int = len(puzzle_input[0])  # Assuming all lines are the same length
+    pos, vec = get_guard(puzzle_input)
+    x, y = pos
+    guard_route: list[tuple[int, int, str]] = []
 
     while True:
-        guard_pos = (
-            guard_pos[0] + guard_dir[0],
-            guard_pos[1] + guard_dir[1],
-        )
-        x, y = guard_pos
+        entry = get_entry(puzzle_input, pos)
+        # Register position
+        guard_route.append((pos[0], pos[1], entry))
 
-        # Stop when guard exists
-        if not 0 < x < max_x:
+        while True:
+            # Get next step
+            pos = (pos[0] + vec[0], pos[1] - vec[1])
+            # Update vector when meeting an obstacle until it's clear ahead
+            entry_next = get_entry(puzzle_input, pos)
+            if entry_next == "#":
+                vec = rotate(vec, 1)
+            else:
+                break
+
+        # Stop when guard is not within area
+        if not 0 <= pos[0] < max_x or not 0 <= pos[1] < max_y:
             break
-        if not 0 < y < max_y:
-            break
 
-        # Change direction if meeting an obstacle
-        entry = puzzle_input[y][x]
-        if entry == "#":
-            guard_dir = (_ for _ in guard_dir)
-
-
-        steps += 1
-
-        break
-
-    return steps
+    return guard_route
 
 
 def main(file_path: Path | None = None):
@@ -108,8 +125,8 @@ def main(file_path: Path | None = None):
     )
 
     puzzle_input = get_puzzle_input(file_path)
-    result = process(puzzle_input)
-    return result
+    visited = process(puzzle_input)
+    return len(visited)
 
 
 if __name__ == "__main__":

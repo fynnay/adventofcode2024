@@ -41,6 +41,34 @@ def test_rotate(vector: tuple[int, int], direction: int, expected: tuple[int, in
     assert rotated == expected
 
 
+@pytest.mark.parametrize(
+    ["symbol", "expected"],
+    [
+        ["^", (-0, +1)],
+        ["v", (-0, -1)],
+        ["<", (-1, -0)],
+        [">", (+1, -0)],
+    ],
+)
+def test_get_guard_vector(symbol: str, expected: tuple[int, int]):
+    assert aoc_06_1.get_vector(symbol) == expected
+
+
+def test_guard_route():
+    puzzle_input = [
+        [".", "#", ".", "."],
+        ["#", ".", ".", "#"],
+        [".", ".", ".", "."],
+        [".", ".", ".", "."],
+        [".", "^", ".", "."],
+        [".", ".", ".", "."],
+        [".", ".", ".", "."],
+        [".", ".", ".", "."],
+    ]
+    guard_route = aoc_06_1.process(puzzle_input)
+    print(guard_route)
+
+
 def test_main():
     puzzle_name = aoc.PuzzleName(
         day=0,
