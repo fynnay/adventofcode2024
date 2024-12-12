@@ -95,15 +95,21 @@ def process(puzzle_input: list[list[str]]) -> list[tuple[int, int, str]]:
         entry = get_entry(puzzle_input, pos)
         # Register position
         guard_route.append((pos[0], pos[1], entry))
+        next_pos = pos
 
         while True:
             # Get next step
-            pos = (pos[0] + vec[0], pos[1] - vec[1])
+            next_pos = (pos[0] + vec[0], pos[1] - vec[1])
             # Update vector when meeting an obstacle until it's clear ahead
-            entry_next = get_entry(puzzle_input, pos)
+            try:
+                entry_next = get_entry(puzzle_input, next_pos)
+            except IndexError:
+                pos = next_pos
+                break
             if entry_next == "#":
                 vec = rotate(vec, 1)
             else:
+                pos = next_pos
                 break
 
         # Stop when guard is not within area
@@ -126,7 +132,8 @@ def main(file_path: Path | None = None):
 
     puzzle_input = get_puzzle_input(file_path)
     visited = process(puzzle_input)
-    return len(visited)
+    distinct_visited = set(visited)
+    return len(distinct_visited)
 
 
 if __name__ == "__main__":

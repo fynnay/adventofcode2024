@@ -56,14 +56,11 @@ def test_get_guard_vector(symbol: str, expected: tuple[int, int]):
 
 def test_guard_route():
     puzzle_input = [
-        [".", "#", ".", "."],
-        ["#", ".", ".", "#"],
-        [".", ".", ".", "."],
-        [".", ".", ".", "."],
-        [".", "^", ".", "."],
-        [".", ".", ".", "."],
-        [".", ".", ".", "."],
-        [".", ".", ".", "."],
+        ["#", ".", ".", "."],
+        [".", ".", ".", "#"],
+        ["^", ".", ".", "."],
+        ["#", ".", ".", "."],
+        [".", ".", "#", "."],
     ]
     guard_route = aoc_06_1.process(puzzle_input)
     print(guard_route)
@@ -71,7 +68,7 @@ def test_guard_route():
 
 def test_main():
     puzzle_name = aoc.PuzzleName(
-        day=0,
+        day=6,
         part=1,
     )
     puzzle_name_text = puzzle_name.build()
