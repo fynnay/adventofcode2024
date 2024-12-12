@@ -2,7 +2,6 @@
 Predict the path of the guard. How many distinct positions will the guard visit before leaving the mapped area?
 """
 from pathlib import Path
-from math import sin, cos
 
 from aoc import (
     PuzzleName,
@@ -10,19 +9,17 @@ from aoc import (
 )
 
 
-# def rotate(vector: tuple[int, int], direction: 0 or 1):
-#     """
-#     Returns new vector from rotating the specified one by 90 degrees
-#
-#     Args:
-#         vector:
-#         direction: 0 for counterclockwise, 1 for clockwise
-#
-#     Returns:
-#
-#     """
-#     shifted = [vector[1], vector[0]]
-#     return rotated
+def rotate(vector: tuple[int, int], direction: 0 or 1) -> tuple[int, int]:
+    """
+    Returns new vector from rotating the specified one by 90 degrees
+
+    Args:
+        vector: The vector to be rotated
+        direction: 0 for counterclockwise (left), 1 for clockwise (right)
+    """
+    new_vector = [vector[1], vector[0]]
+    new_vector[direction] = -new_vector[direction]
+    return new_vector[0], new_vector[1]
 
 
 def get_puzzle_input(file_path: Path) -> list[list[str]]:

@@ -3,6 +3,7 @@ from importlib import util
 
 import pytest
 import aoc
+import aoc_06_1
 
 
 @pytest.fixture
@@ -31,6 +32,7 @@ def test_rotate(vector: tuple[int, int], expected: tuple[int, int]):
     Rotate the incoming vector to the right by 90 degrees
     """
     rotated = (-vector[1], vector[0])
+    rotated = aoc_06_1.rotate(vector, 0)
     assert rotated == expected
 
 
