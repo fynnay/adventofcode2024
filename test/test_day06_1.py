@@ -19,20 +19,25 @@ def guard() -> tuple[tuple[int, int], tuple[int, int]]:
 
 
 @pytest.mark.parametrize(
-    ["vector", "expected"],
+    ["vector", "direction", "expected"],
     [
-        [(1, 0), (0, 1)],
-        [(0, 1), (-1, 0)],
-        [(-1, 0), (0, -1)],
-        [(0, -1), (1, 0)],
+        # counterclockwise
+        [(1, 0), 0, (0, 1)],
+        [(0, 1), 0, (-1, 0)],
+        [(-1, 0), 0, (0, -1)],
+        [(0, -1), 0, (1, 0)],
+        # clockwise
+        [(1, 0), 1, (0, -1)],
+        [(0, -1), 1, (-1, 0)],
+        [(-1, 0), 1, (0, 1)],
+        [(0, 1), 1, (1, 0)],
     ]
 )
-def test_rotate(vector: tuple[int, int], expected: tuple[int, int]):
+def test_rotate(vector: tuple[int, int], direction: int, expected: tuple[int, int]):
     """
     Rotate the incoming vector to the right by 90 degrees
     """
-    rotated = (-vector[1], vector[0])
-    rotated = aoc_06_1.rotate(vector, 0)
+    rotated = aoc_06_1.rotate(vector, direction)
     assert rotated == expected
 
 
