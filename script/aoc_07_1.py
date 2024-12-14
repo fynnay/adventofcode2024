@@ -1,3 +1,4 @@
+import itertools
 from pathlib import Path
 import math
 from typing import Type, Callable
@@ -34,29 +35,11 @@ def add(a: float, b: float) -> float:
     return a + b
 
 
-def get_combinations(locations: int, operators: list[any] = (multiply, add)) -> list[list[any]]:
+def get_combinations(locations: int, operators: list[any] = (multiply, add)) -> list[tuple[any, ...]]:
     """
     Returns lists of all possible combinations of operators with the given amount of locations
-
-    - Each operator occurs once at each index
-
     """
-    possibilities = locations * len(operators)
-    combinations = []
-
-    for p in range(possibilities):
-        pos = p + 1
-        combination = []
-
-        for l in range(locations + len(combination)):
-            loc = l + 1
-
-            for op in operators:
-                combination += [op] * pos * loc
-
-            combinations.append(combination)
-
-        return combinations
+    return list(itertools.product(operators, repeat=locations))
 
 
 def validate(test: int, numbers: list[int]) -> bool:
