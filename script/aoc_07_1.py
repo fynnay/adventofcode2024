@@ -34,23 +34,29 @@ def add(a: float, b: float) -> float:
     return a + b
 
 
-def get_combinations(positions: int, operators: list[any] = (multiply, add)) -> list[list[any]]:
+def get_combinations(locations: int, operators: list[any] = (multiply, add)) -> list[list[any]]:
     """
-    Returns lists of Callables in all possible combinations given amount of possible positions
+    Returns lists of all possible combinations of operators with the given amount of locations
+
+    - Each operator occurs once at each index
+
     """
+    possibilities = locations * len(operators)
     combinations = []
 
-    for _ in range(positions):
-        pos = _ + 1
+    for p in range(possibilities):
+        pos = p + 1
         combination = []
 
-        for index, op in enumerate(operators):
-            mult = index + 1 * pos - len(combination)
-            combination += [op] * mult
+        for l in range(locations + len(combination)):
+            loc = l + 1
 
-        combinations.append(combination)
+            for op in operators:
+                combination += [op] * pos * loc
 
-    return combinations
+            combinations.append(combination)
+
+        return combinations
 
 
 def validate(test: int, numbers: list[int]) -> bool:

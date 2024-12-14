@@ -14,7 +14,17 @@ def something():
 @pytest.mark.parametrize(
     ["positions", "operators", "expected"],
     [
-        [1, ["*", "+"], [["*", "+"]]],
+        [1, ["*", "+"],
+         [
+             ["*", "+"],
+         ]],
+        [2, ["*", "+"],
+         [
+             ["+", "+"],
+             ["*", "*"],
+             ["*", "+"],
+             ["+", "*"],
+         ]],
     ]
 )
 def test_combinations(positions: int, operators: list[str], expected: list[list[str]]):
