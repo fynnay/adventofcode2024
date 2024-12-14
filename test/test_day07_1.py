@@ -3,12 +3,25 @@ from importlib import util
 
 import pytest
 import aoc
+import aoc_07_1
 
 
 @pytest.fixture
 def something():
     return
 
+
+@pytest.mark.parametrize(
+    ["positions", "operators", "expected"],
+    [
+        [1, ["*", "+"], [["*", "+"]]],
+    ]
+)
+def test_combinations(positions: int, operators: list[str], expected: list[list[str]]):
+    combinations = aoc_07_1.get_combinations(positions, operators)
+    for _ in combinations:
+        print(_)
+    assert combinations == expected
 
 def test_main():
     puzzle_name = aoc.PuzzleName(

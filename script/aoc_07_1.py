@@ -1,5 +1,6 @@
 from pathlib import Path
-from typing import Type
+import math
+from typing import Type, Callable
 
 from aoc import (
     PuzzleName,
@@ -24,6 +25,36 @@ def get_input_values(file_path: Path) -> list[INPUT_VALUE]:
 
     return values
 
+
+def multiply(a: float, b: float) -> float:
+    return a * b
+
+
+def add(a: float, b: float) -> float:
+    return a + b
+
+
+def get_combinations(positions: int, operators: list[any] = (multiply, add)) -> list[list[any]]:
+    """
+    Returns lists of Callables in all possible combinations given amount of possible positions
+    """
+    combinations = []
+
+    for _ in range(positions):
+        pos = _ + 1
+        combination = []
+
+        for index, op in enumerate(operators):
+            mult = index + 1 * pos - len(combination)
+            combination += [op] * mult
+
+        combinations.append(combination)
+
+    return combinations
+
+
+def validate(test: int, numbers: list[int]) -> bool:
+    pass
 
 def process():
     pass
