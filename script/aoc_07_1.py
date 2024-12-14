@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Type
 
 from aoc import (
     PuzzleName,
@@ -6,13 +7,20 @@ from aoc import (
 )
 
 
-def get_input_values(file_path: Path):
+INPUT_VALUE = tuple[int, list[int]]
+
+
+def get_input_values(file_path: Path) -> list[INPUT_VALUE]:
     values = []
 
     with open(file_path, 'r') as file:
         for line in file.readlines():
             if not line:
                 continue
+            test, numbers = line.split(":")
+            test_int = int(test.strip(" "))
+            numbers_int = [int(_) for _ in numbers.split(" ") if _]
+            values.append((test_int, numbers_int))
 
     return values
 
@@ -31,7 +39,8 @@ def main(file_path: Path | None = None):
             part=puzzle_name.part,
         )
     )
-    result = "I am result"
+    input_values = get_input_values(file_path)
+    result = input_values
     return result
 
 
