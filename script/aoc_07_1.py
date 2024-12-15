@@ -10,9 +10,10 @@ from aoc import (
 
 
 INPUT_VALUE = tuple[int, list[int]]
+INPUT_VALUES = list[INPUT_VALUE]
 
 
-def get_input_values(file_path: Path) -> list[INPUT_VALUE]:
+def get_input_values(file_path: Path) -> INPUT_VALUES:
     values = []
 
     with open(file_path, 'r') as file:
@@ -37,16 +38,38 @@ def add(a: float, b: float) -> float:
 
 def get_combinations(locations: int, operators: list[any] = (multiply, add)) -> list[tuple[any, ...]]:
     """
-    Returns lists of all possible combinations of operators with the given amount of locations
+    Returns lists of all possible combinations of operators given the amount of locations
     """
     return list(itertools.product(operators, repeat=locations))
 
 
 def validate(test: int, numbers: list[int]) -> bool:
-    pass
+    operator_combinations = get_combinations(len(numbers) - 1, [multiply, add])
 
-def process():
-    pass
+    operators: list[Callable]
+    for operators in operator_combinations:
+        result = None
+        for index, number in enumerate(numbers):
+            if result is None:
+                result = number
+                continue
+            a = result
+            b = number
+            operator = operators[index - 1]
+            result = operator(a, b)
+        if result == test:
+            return True
+
+    return False
+
+def process(input_values: INPUT_VALUES) -> list[bool]:
+    results = []
+    for input_value in input_values:
+        test, numbers = input_value
+        is_valid = validate(test, numbers)
+        results.append(is_valid)
+    return results
+
 
 
 def main(file_path: Path | None = None):
@@ -60,7 +83,7 @@ def main(file_path: Path | None = None):
         )
     )
     input_values = get_input_values(file_path)
-    result = input_values
+    result = process(input_values)
     return result
 
 

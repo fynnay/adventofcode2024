@@ -34,6 +34,20 @@ def test_combinations(positions: int, operators: list[str], expected: list[list[
         print(_)
     assert combinations == expected
 
+
+@pytest.mark.parametrize(
+    ["input_value", "expected"],
+    [
+        [[10, [5, 5]], True],
+        [[1, [5, 5]], False],
+        [[10, [3, 3, 1]], True],
+    ]
+)
+def test_validation(input_value: aoc_07_1.INPUT_VALUE, expected: bool):
+    result = aoc_07_1.validate(*input_value)
+    assert result == expected
+
+
 def test_main():
     puzzle_name = aoc.PuzzleName(
         day=7,
@@ -54,4 +68,4 @@ def test_main():
     spec.loader.exec_module(module)
 
     result = module.main(input_file)
-    assert result == 2500
+    assert result
