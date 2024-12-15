@@ -17,19 +17,60 @@ from aoc import (
 )
 
 
-def get_input_values(file_path: Path):
+# Custom Types
+POINT = tuple[int, int]
+VECTOR = tuple[int, int]
+MATRIX = list[list[str]]
+
+
+def get_input_values(file_path: Path) -> MATRIX:
     values = []
 
     with open(file_path, 'r') as file:
         for line in file.readlines():
             if not line:
                 continue
+            entries = [_ for _ in line.strip("\n").strip(" ")]
+            values.append(entries)
 
     return values
 
+def show_matrix(
+        matrix: MATRIX,
+):
+    for line in matrix:
+        print("".join(line))
+
+def get_cross_section(
+        matrix: MATRIX,
+        point: POINT,
+        vector: VECTOR,
+        length: int = None,
+) -> list[tuple[tuple[int, int], str]]:
+    """
+    Returns a cross-section from the `matrix` at the `point` in the direction of the `vector`.
+    If length is specified, limit the amount of returned points
+    """
+    x, y = point
+    vx, vy = vector
+    cross_section = []
+
+    for _ in range(length):
+        if x < 0 or y < 0:
+            break
+        try:
+            entry = matrix[y][x]
+        except IndexError:
+            break
+        x += vx
+        y += vy
+        cross_section += entry
+
+    return cross_section
+
 
 def process(input_values):
-    print(input_values)
+    show_matrix(input_values)
     return input_values
 
 
