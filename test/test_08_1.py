@@ -32,6 +32,10 @@ def matrix_1() -> MATRIX:
         [(0, 0), (0, 1), 2, ["1", "1"]],
         [(0, 0), (1, 0), 1, ["1"]],
         [(0, 0), (2, 1), 0, []],
+        [(5, 2), (1, 1), None, ["6"]],
+        [(5, 2), (-1, -1), None, ["6", "5", "4"]],
+        [(5, 2), (-2, -1), None, ["6", "4", "2"]],
+        [(5, 2), (-2, -2), None, ["6", "4"]],
     ],
 )
 def test_get_cross_section(matrix_1: MATRIX, point: POINT, vector: VECTOR, length: int, expected: list[str]):
