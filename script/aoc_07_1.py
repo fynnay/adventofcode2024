@@ -1,13 +1,11 @@
 import itertools
 from pathlib import Path
-import math
-from typing import Type, Callable
+from typing import Callable
 
 from aoc import (
     PuzzleName,
     Dir,
 )
-
 
 INPUT_VALUE = tuple[int, list[int]]
 INPUT_VALUES = list[INPUT_VALUE]
@@ -37,14 +35,14 @@ def add(a: float, b: float) -> float:
     return a + b
 
 
-def get_combinations(items: list[any], location_count: int) -> list[tuple[any, ...]]:
+def get_combinations(items: tuple[any], location_count: int) -> list[tuple]:
     """
     Returns lists of all possible combinations of items given the amount of locations
     """
     return list(itertools.product(items, repeat=location_count))
 
 
-def apply_operators(operators: list[OPERATOR], numbers: list[float]) -> float:
+def apply_operators(operators: tuple[OPERATOR], numbers: list[float]) -> float:
     """
     Returns the result of applying the operators to the numbers
     """
@@ -63,7 +61,7 @@ def apply_operators(operators: list[OPERATOR], numbers: list[float]) -> float:
     return result
 
 
-def get_valid_operator_combination(input_value: INPUT_VALUE, operators: tuple[Callable]=(multiply, add,)) -> list[OPERATOR]:
+def get_valid_operator_combination(input_value: INPUT_VALUE, operators: tuple[Callable]=(multiply, add,)) -> tuple[OPERATOR] or None:
     """
     Returns a list of operators that, when applied to the numbers in the given order, will produce the given test value
     """
@@ -75,7 +73,7 @@ def get_valid_operator_combination(input_value: INPUT_VALUE, operators: tuple[Ca
         if result == test:
             return op_combo
 
-    return []
+    return None
 
 
 def filter_input_values(input_values: INPUT_VALUES) -> list[tuple[INPUT_VALUE, list[Callable]]]:
@@ -94,7 +92,7 @@ def filter_input_values(input_values: INPUT_VALUES) -> list[tuple[INPUT_VALUE, l
 
 def process(input_values: INPUT_VALUES) -> int:
     """
-    Returns the SUM of all valid INPUT_VALUEs test value
+    Returns the SUM of all valid test values
     """
     results = []
     valid_input_values = filter_input_values(input_values)

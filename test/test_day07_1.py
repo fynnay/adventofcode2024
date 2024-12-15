@@ -39,9 +39,9 @@ def test_combinations(positions: int, operators: list[str], expected: list[list[
     ["input_value", "expected"],
     [
         [[10, [5, 5]], (add, )],
-        [[1, [5, 5]], []],
+        [[1, [5, 5]], None],
         [[10, [3, 3, 1]], (multiply, add)],
-        [[1, [3, 3, 1]], []],
+        [[1, [3, 3, 1]], None],
     ]
 )
 def test_filter_operators(input_value: aoc_07_1.INPUT_VALUE, expected: bool):
