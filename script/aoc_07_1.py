@@ -108,8 +108,7 @@ def process(input_values: INPUT_VALUES) -> list[float]:
 
 def solve(input_values: INPUT_VALUES):
     results = process(input_values)
-    result = sum(results)
-    return result
+    return sum(results)
 
 
 def main(file_path: Path | None = None):
