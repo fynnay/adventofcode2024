@@ -90,6 +90,7 @@ def filter_input_values(input_values: INPUT_VALUES) -> list[tuple[INPUT_VALUE, l
 
     return results
 
+
 def process(input_values: INPUT_VALUES) -> int:
     """
     Returns the SUM of all valid test values
