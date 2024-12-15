@@ -11,6 +11,7 @@ from aoc import (
 
 INPUT_VALUE = tuple[int, list[int]]
 INPUT_VALUES = list[INPUT_VALUE]
+OPERATOR = Callable
 
 
 def get_input_values(file_path: Path) -> INPUT_VALUES:
@@ -36,51 +37,83 @@ def add(a: float, b: float) -> float:
     return a + b
 
 
-def get_combinations(locations: int, operators: list[any] = (multiply, add)) -> list[tuple[any, ...]]:
+def get_combinations(items: list[any], location_count: int) -> list[tuple[any, ...]]:
     """
-    Returns lists of all possible combinations of operators given the amount of locations
+    Returns lists of all possible combinations of items given the amount of locations
     """
-    return list(itertools.product(operators, repeat=locations))
+    return list(itertools.product(items, repeat=location_count))
 
 
-def apply_operators(operators: list[Callable], numbers: list[float]) -> float:
+def apply_operators(operators: list[OPERATOR], numbers: list[float]) -> float:
     """
-    Applies the given operators to the numbers returning its result
+    Returns the result of applying the operators to the numbers
     """
     result = None
+
     for index, number in enumerate(numbers):
         if result is None:
             result = number
             continue
+
         a = result
         b = number
         operator = operators[index - 1]
         result = operator(a, b)
+
     return result
 
 
-def validate(input_value: INPUT_VALUE) -> bool:
+def get_valid_operator_combination(input_value: INPUT_VALUE, operators: tuple[Callable]=(multiply, add,)) -> list[OPERATOR]:
+    """
+    Returns a list of operators that, when applied to the numbers in the given order, will produce the given test value.
+    Returns an empty list if none do
+    """
     test, numbers = input_value
-    operator_combinations = get_combinations(len(numbers) - 1, [multiply, add])
+    operator_combinations = get_combinations(operators, len(numbers) - 1)
 
-    operators: list[Callable]
-    for operators in operator_combinations:
-        result = apply_operators(operators, numbers)
+    for op_combo in operator_combinations:
+        result = apply_operators(op_combo, numbers)
         if result == test:
-            return True
+            return op_combo
 
-    return False
+    return []
 
-def process(input_values: INPUT_VALUES) -> list[bool]:
+
+def filter_input_values(input_values: INPUT_VALUES) -> list[tuple[INPUT_VALUE, list[Callable]]]:
+    """
+    Returns a list of input values and a list of valid operators
+    """
     results = []
+
     for input_value in input_values:
-        is_valid = validate(input_value)
-        results.append(is_valid)
+        operators = get_valid_operator_combination(input_value)
+        if not operators:
+            continue
+        results.append((input_value, operators))
+
+    return results
+
+def process(input_values: INPUT_VALUES) -> list[float]:
+    results = []
+    valid_input_values = filter_input_values(input_values)
+
+    for input_value, operators in valid_input_values:
+        test, numbers = input_value
+        # NOTE: Optionally you can apply the operators again to double-check it matches the test
+        # result = apply_operators(operators, numbers)
+        results.append(test)
+
     return results
 
 
+def solve(input_values: INPUT_VALUES):
+    results = process(input_values)
+    result = sum(results)
+    return result
+
 
 def main(file_path: Path | None = None):
+    # Read input file
     script_path = Path(__file__)
     puzzle_name = PuzzleName.parse(script_path.stem)
     file_path = file_path or Dir.build_file_path(
@@ -91,7 +124,7 @@ def main(file_path: Path | None = None):
         )
     )
     input_values = get_input_values(file_path)
-    result = process(input_values)
+    result = solve(input_values)
     return result
 
 
