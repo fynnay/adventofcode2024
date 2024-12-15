@@ -2,8 +2,9 @@ import sys
 from importlib import util
 
 import pytest
+
 import aoc
-from aoc_08_1 import MATRIX
+from aoc_08_1 import MATRIX, POINT, VECTOR, get_cross_section
 
 
 @pytest.fixture
@@ -17,6 +18,24 @@ def matrix_1() -> MATRIX:
     lines = [[i for i in _] for _ in text]
 
     return lines
+
+
+@pytest.mark.parametrize(
+    ["point", "vector", "length", "expected"],
+    [
+        [(0, 0), (1, 1), None, ["1", "2", "3"]],
+        [(0, 0), (0, 1), None, ["1", "1", "1"]],
+        [(0, 0), (1, 0), None, ["1", "2", "3", "4", "5", "6"]],
+    ],
+)
+def test_get_cross_section(matrix_1: MATRIX, point: POINT, vector: VECTOR, length: int, expected: list[str]):
+    result = get_cross_section(
+        matrix_1,
+        point,
+        vector,
+        length,
+    )
+    assert result == expected
 
 
 def test_main():
