@@ -43,7 +43,8 @@ def get_combinations(locations: int, operators: list[any] = (multiply, add)) -> 
     return list(itertools.product(operators, repeat=locations))
 
 
-def validate(test: int, numbers: list[int]) -> bool:
+def validate(input_value: INPUT_VALUE) -> bool:
+    test, numbers = input_value
     operator_combinations = get_combinations(len(numbers) - 1, [multiply, add])
 
     operators: list[Callable]
@@ -65,8 +66,7 @@ def validate(test: int, numbers: list[int]) -> bool:
 def process(input_values: INPUT_VALUES) -> list[bool]:
     results = []
     for input_value in input_values:
-        test, numbers = input_value
-        is_valid = validate(test, numbers)
+        is_valid = validate(input_value)
         results.append(is_valid)
     return results
 

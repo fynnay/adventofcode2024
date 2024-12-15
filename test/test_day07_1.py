@@ -30,8 +30,6 @@ def something():
 )
 def test_combinations(positions: int, operators: list[str], expected: list[list[str]]):
     combinations = aoc_07_1.get_combinations(positions, operators)
-    for _ in combinations:
-        print(_)
     assert combinations == expected
 
 
@@ -41,10 +39,11 @@ def test_combinations(positions: int, operators: list[str], expected: list[list[
         [[10, [5, 5]], True],
         [[1, [5, 5]], False],
         [[10, [3, 3, 1]], True],
+        [[1, [3, 3, 1]], False],
     ]
 )
 def test_validation(input_value: aoc_07_1.INPUT_VALUE, expected: bool):
-    result = aoc_07_1.validate(*input_value)
+    result = aoc_07_1.validate(input_value)
     assert result == expected
 
 
