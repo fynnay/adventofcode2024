@@ -57,7 +57,9 @@ def get_cross_section(
     vx, vy = vector
     cross_section = []
 
-    for _ in range(length):
+    while True:
+        if length is not None and len(cross_section) >= length:
+            break
         if x < 0 or y < 0:
             break
         try:
