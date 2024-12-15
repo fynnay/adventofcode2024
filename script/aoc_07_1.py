@@ -43,21 +43,29 @@ def get_combinations(locations: int, operators: list[any] = (multiply, add)) -> 
     return list(itertools.product(operators, repeat=locations))
 
 
+def apply_operators(operators: list[Callable], numbers: list[float]) -> float:
+    """
+    Applies the given operators to the numbers returning its result
+    """
+    result = None
+    for index, number in enumerate(numbers):
+        if result is None:
+            result = number
+            continue
+        a = result
+        b = number
+        operator = operators[index - 1]
+        result = operator(a, b)
+    return result
+
+
 def validate(input_value: INPUT_VALUE) -> bool:
     test, numbers = input_value
     operator_combinations = get_combinations(len(numbers) - 1, [multiply, add])
 
     operators: list[Callable]
     for operators in operator_combinations:
-        result = None
-        for index, number in enumerate(numbers):
-            if result is None:
-                result = number
-                continue
-            a = result
-            b = number
-            operator = operators[index - 1]
-            result = operator(a, b)
+        result = apply_operators(operators, numbers)
         if result == test:
             return True
 
