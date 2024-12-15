@@ -65,8 +65,7 @@ def apply_operators(operators: list[OPERATOR], numbers: list[float]) -> float:
 
 def get_valid_operator_combination(input_value: INPUT_VALUE, operators: tuple[Callable]=(multiply, add,)) -> list[OPERATOR]:
     """
-    Returns a list of operators that, when applied to the numbers in the given order, will produce the given test value.
-    Returns an empty list if none do
+    Returns a list of operators that, when applied to the numbers in the given order, will produce the given test value
     """
     test, numbers = input_value
     operator_combinations = get_combinations(operators, len(numbers) - 1)
@@ -93,7 +92,10 @@ def filter_input_values(input_values: INPUT_VALUES) -> list[tuple[INPUT_VALUE, l
 
     return results
 
-def process(input_values: INPUT_VALUES) -> list[float]:
+def process(input_values: INPUT_VALUES) -> int:
+    """
+    Returns the SUM of all valid INPUT_VALUEs test value
+    """
     results = []
     valid_input_values = filter_input_values(input_values)
 
@@ -103,11 +105,6 @@ def process(input_values: INPUT_VALUES) -> list[float]:
         # result = apply_operators(operators, numbers)
         results.append(test)
 
-    return results
-
-
-def solve(input_values: INPUT_VALUES):
-    results = process(input_values)
     return sum(results)
 
 
@@ -123,7 +120,7 @@ def main(file_path: Path | None = None):
         )
     )
     input_values = get_input_values(file_path)
-    result = solve(input_values)
+    result = process(input_values)
     return result
 
 
