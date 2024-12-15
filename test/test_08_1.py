@@ -3,11 +3,20 @@ from importlib import util
 
 import pytest
 import aoc
+from aoc_08_1 import MATRIX
 
 
 @pytest.fixture
-def something():
-    return
+def matrix_1() -> MATRIX:
+    text = [
+        "123456",
+        "123456",
+        "123456",
+    ]
+
+    lines = [[i for i in _] for _ in text]
+
+    return lines
 
 
 def test_main():
