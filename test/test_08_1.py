@@ -4,7 +4,14 @@ from importlib import util
 import pytest
 
 import aoc
-from aoc_08_1 import MATRIX, POINT, VECTOR, get_cross_section
+from aoc_08_1 import (
+    MATRIX,
+    POINT,
+    VECTOR,
+    get_circuit,
+    CIRCUIT,
+    find_resonant_circuits
+)
 
 
 @pytest.fixture
@@ -13,6 +20,46 @@ def matrix_1() -> MATRIX:
         "123456",
         "123456",
         "123456",
+    ]
+
+    lines = [[i for i in _] for _ in text]
+
+    return lines
+
+
+@pytest.fixture
+def matrix_2() -> MATRIX:
+    text = [
+        "..........",
+        "..........",
+        "..........",
+        "....a.....",
+        "........a.",
+        ".....a....",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+    ]
+
+    lines = [[i for i in _] for _ in text]
+
+    return lines
+
+
+@pytest.fixture
+def matrix_3() -> MATRIX:
+    text = [
+        "..........",
+        "...#......",
+        "#.........",
+        "....a.....",
+        "........a.",
+        ".....a....",
+        "..#.......",
+        "......#...",
+        "..........",
+        "..........",
     ]
 
     lines = [[i for i in _] for _ in text]
@@ -39,13 +86,44 @@ def matrix_1() -> MATRIX:
     ],
 )
 def test_get_cross_section(matrix_1: MATRIX, point: POINT, vector: VECTOR, length: int, expected: list[str]):
-    result = get_cross_section(
+    result = get_circuit(
         matrix_1,
         point,
         vector,
         length,
     )
     assert result == expected
+
+
+@pytest.mark.parametrize(
+    ["point", "vector", "expected"],
+    [
+        [
+            (4, 3),
+            (1, 2),
+            [
+                ["a", "a", ".", "."],
+            ],
+        ]
+    ]
+)
+def test_get_resonant_circuits(matrix_2: MATRIX, point: POINT, vector: VECTOR, expected: list[CIRCUIT]):
+    # Get circuits from matrix
+    # TODO: Do separate check
+    circuits = [
+        get_circuit(
+            matrix_2,
+            point,
+            vector,
+            None
+        )
+    ]
+
+    # Get resonant circuits and flatten nodes to check result
+    resonant_circuits = find_resonant_circuits(circuits)
+    nodes = [[a[1] for a in b] for b in resonant_circuits]
+
+    assert nodes == expected
 
 
 def test_main():
