@@ -15,7 +15,6 @@ from aoc import (
     Dir,
 )
 
-
 # Custom types
 POINT = tuple[int, int]
 VECTOR = tuple[int, int]
@@ -81,9 +80,9 @@ def get_cross_section(
     return cross_section
 
 
-def process(input_values: MATRIX):
+def process(input_values: MATRIX) -> int:
     show_matrix(input_values)
-    return input_values
+    return len(input_values)
 
 
 def main(file_path: Path | None = None):
