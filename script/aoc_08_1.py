@@ -5,6 +5,8 @@ the same frequency, there are two anti nodes, one on either side of them.
 
 Antennas with different frequencies don't create anti nodes; A and a count as different frequencies.
 However, anti nodes can occur at locations that contain antennas.
+
+How many unique anti-nodes can be placed within the bounds of the map?
 """
 from pathlib import Path
 
@@ -14,10 +16,16 @@ from aoc import (
 )
 
 
-# Define custom types
+# Custom types
 POINT = tuple[int, int]
 VECTOR = tuple[int, int]
-MATRIX = list[list[str]]
+ANTENNA = r"[a-zA-Z0-9]"
+ANTI_NODE = r"#"
+EMPTY_NODE = r"\."
+NODE = ANTENNA or ANTI_NODE or EMPTY_NODE
+MATRIX = list[list[NODE]]
+ELEMENT = tuple[POINT, NODE]
+CIRCUIT = list[ELEMENT]
 
 
 def get_input_values(file_path: Path) -> MATRIX:
@@ -48,7 +56,7 @@ def get_cross_section(
         point: POINT,
         vector: VECTOR,
         length: int = None,
-) -> list[tuple[tuple[int, int], str]]:
+) -> CIRCUIT:
     """
     Returns a cross-section from the `matrix` at the `point` in the direction of the `vector`.
     If length is specified, limit the amount of returned points
