@@ -8,6 +8,7 @@ However, anti nodes can occur at locations that contain antennas.
 
 How many unique anti-nodes can be placed within the bounds of the map?
 """
+import re
 from pathlib import Path
 
 from aoc import (
@@ -50,7 +51,7 @@ def show_matrix(
         print("".join(line))
 
 
-def get_cross_section(
+def get_circuit(
         matrix: MATRIX,
         point: POINT,
         vector: VECTOR,
@@ -58,14 +59,14 @@ def get_cross_section(
 ) -> CIRCUIT:
     """
     Returns a cross-section from the `matrix` at the `point` in the direction of the `vector`.
-    If length is specified, limit the amount of returned points
+    If `length` is specified, limit the amount of returned points.
     """
     x, y = point
     vx, vy = vector
-    cross_section = []
+    circuit: CIRCUIT = []
 
     while True:
-        if length is not None and len(cross_section) >= length:
+        if length is not None and len(circuit) >= length:
             break
         if x < 0 or y < 0:
             break
@@ -73,11 +74,29 @@ def get_cross_section(
             entry = matrix[y][x]
         except IndexError:
             break
+        circuit.append(((x, y), entry))
         x += vx
         y += vy
-        cross_section += entry
 
-    return cross_section
+    return circuit
+
+
+def find_resonant_circuits(circuits: list[CIRCUIT]) -> list[CIRCUIT]:
+    """
+    Returns a list of the circuits that have good vibrations
+    """
+    resonant_circuits = []
+
+    for circuit in circuits:
+        nodes = [_[1] for _ in circuit if re.search(_[1], EMPTY_NODE)]
+        for _ in nodes:
+            if nodes.count(_) > 1:
+                resonant_circuits.append(circuit)
+                break
+        else:
+            continue
+
+    return resonant_circuits
 
 
 def process(input_values: MATRIX) -> int:
