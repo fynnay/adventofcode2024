@@ -153,6 +153,27 @@ def test_get_antennas(_matrix, expected: list[ELEMENT]):
     assert antennas == expected
 
 
+@pytest.mark.parametrize(
+    ["_matrix", "expected"],
+    [
+        [
+            [
+                "a...",
+                ".b..",
+                "....",
+                "..ba",
+            ],
+            [
+                [((1,1), "b"), ((2,3), "b")]
+            ]
+        ]
+    ]
+)
+def test_get_resonating_antennas(_matrix, expected: list[ELEMENT]):
+    result = get_resonating_antennas()
+    assert result == expected
+
+
 def test_main():
     puzzle_name = aoc.PuzzleName(
         day=8,

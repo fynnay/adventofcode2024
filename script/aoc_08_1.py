@@ -158,9 +158,56 @@ def normalized(vector: VECTOR, scaled: bool = False) -> VECTOR_NORMALIZED:
     return vector_normalized
 
 
+def rounded(vector: VECTOR_NORMALIZED) -> VECTOR:
+    return int(round(vector[0])), int(round(vector[1]))
+
+
 def process(input_values: MATRIX) -> int:
     show_matrix(input_values)
     return len(input_values)
+
+
+def process_2(input_values: MATRIX) -> int:
+    """
+    - Get all antenna points
+    - Find antennas with same ID
+    - Find antennas with direct line of sight
+    - Place anti-nodes on either side, within bounds of map
+    - Count number of anti-nodes within bounds of map
+    """
+    # Get all antennas
+    antennas = get_antennas(input_values)
+
+    # Group antennas by NODE
+    antenna_groups: dict[str, list[ELEMENT]] = {}
+    for _ in antennas:
+        node = _[1]
+        antenna_groups.setdefault(node, [])
+        antenna_groups[node].append(_)
+
+    # Filter resonating antennas (with direct line of sight)
+    max_x = len(input_values[0])
+    max_y = len(input_values)
+
+    for node, group in antenna_groups.items():
+        for antenna_1 in group:
+            point_1 = antenna_1[0]
+            other_antennas = [_ for _ in group if _ != antenna_1]
+            for antenna_2 in other_antennas:
+                point_2 = antenna_2[0]
+                vector = get_vector(point_1, point_2)
+                vector_normalized = normalized(vector)
+                vector_rounded = rounded(vector_normalized)
+                # Check whether there are any obstructions in line of sight
+                line = get_line(
+                    input_values,
+                    point_2,
+                    vector_rounded,
+                )
+                print(vector, vector_normalized)
+
+    # TODO: Place anti-nodes
+    return len(antenna_groups)
 
 
 def main(file_path: Path | None = None):
