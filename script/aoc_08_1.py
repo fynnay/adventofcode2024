@@ -130,24 +130,30 @@ def get_vector(point_1: POINT, point_2: POINT) -> VECTOR:
     return vector
 
 
-def normalize(vector: VECTOR) -> VECTOR_NORMALIZED:
+def normalized(vector: VECTOR, scaled: bool = False) -> VECTOR_NORMALIZED:
     """
-    Normalize the given vector
+    Normalize the given vector either by square root or max absolute value
     """
-    magnitude = math.sqrt(
-        math.pow(
-            vector[0],
-            2
-        ) + math.pow(
-            vector[1],
-            2
+    if scaled:
+        max_abs = max(abs(vector[0]), abs(vector[1]))
+        vector_normalized = [
+            vector[0] if max_abs == 0 else vector[0] / max_abs,
+            vector[1] if max_abs == 0 else vector[1] / max_abs,
+        ]
+    else:
+        magnitude = math.sqrt(
+            math.pow(
+                vector[0],
+                2
+            ) + math.pow(
+                vector[1],
+                2
+            )
         )
-    )
-
-    vector_normalized = (
-        vector[0] / magnitude,
-        vector[1] / magnitude,
-    )
+        vector_normalized = (
+            vector[0] / magnitude,
+            vector[1] / magnitude,
+        )
 
     return vector_normalized
 
@@ -168,7 +174,7 @@ def main(file_path: Path | None = None):
         )
     )
     input_values = get_input_values(file_path)
-    result = process(input_values)
+    result = process_2(input_values)
     return result
 
 
