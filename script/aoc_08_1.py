@@ -51,6 +51,23 @@ def show_matrix(
         print("".join(line))
 
 
+def get_antennas(matrix: MATRIX) -> list[ELEMENT]:
+    """
+    Returns a list of ELEMENTS for each ANTENNA in the MATRIX
+    """
+    elements: list[ELEMENT] = []
+
+    for i, line in enumerate(matrix):
+        for j, node in enumerate(line):
+            match = re.match(ANTENNA, node)
+            if not match:
+                continue
+            element = ((j, i), node)
+            elements.append(element)
+
+    return elements
+
+
 def get_circuit(
         matrix: MATRIX,
         point: POINT,

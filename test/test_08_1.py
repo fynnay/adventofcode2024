@@ -10,7 +10,9 @@ from aoc_08_1 import (
     VECTOR,
     get_circuit,
     CIRCUIT,
-    find_resonant_circuits
+    find_resonant_circuits,
+    ELEMENT,
+    get_antennas,
 )
 
 
@@ -33,9 +35,9 @@ def matrix_2() -> MATRIX:
         "..........",
         "..........",
         "..........",
-        "....a.....",
-        "........a.",
-        ".....a....",
+        "....a.....",  # 4,3
+        "........a.",  # 8,4
+        ".....a....",  # 5,5
         "..........",
         "..........",
         "..........",
@@ -124,6 +126,31 @@ def test_get_resonant_circuits(matrix_2: MATRIX, point: POINT, vector: VECTOR, e
     nodes = [[a[1] for a in b] for b in resonant_circuits]
 
     assert nodes == expected
+
+
+@pytest.mark.parametrize(
+    ["_matrix", "expected"],
+    [
+        [
+            [
+                list("....b"),
+                list(".a.b."),
+                list("....."),
+                list("...a."),
+            ],
+            [
+                ((4,0), "b"),
+                ((1,1), "a"), ((3,1), "b"),
+                ((3,3), "a"),
+            ]
+        ]
+    ]
+)
+def test_get_antennas(_matrix, expected: list[ELEMENT]):
+    antennas = get_antennas(
+        _matrix
+    )
+    assert antennas == expected
 
 
 def test_main():
