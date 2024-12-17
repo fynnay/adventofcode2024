@@ -8,6 +8,7 @@ However, anti nodes can occur at locations that contain antennas.
 
 How many unique anti-nodes can be placed within the bounds of the map?
 """
+import math
 import re
 from pathlib import Path
 
@@ -19,6 +20,7 @@ from aoc import (
 # Custom types
 POINT = tuple[int, int]
 VECTOR = tuple[int, int]
+VECTOR_NORMALIZED = tuple[float, float]
 NODE = str
 MATRIX = list[list[NODE]]
 ELEMENT = tuple[POINT, NODE]
@@ -115,6 +117,39 @@ def find_resonant_circuits(circuits: list[LINE]) -> list[LINE]:
             continue
 
     return resonant_circuits
+
+
+def get_vector(point_1: POINT, point_2: POINT) -> VECTOR:
+    """
+    Returns the vector of point_1 to point_2
+    """
+    vector = (
+        point_1[0] - point_2[0],
+        point_1[1] - point_2[1],
+    )
+    return vector
+
+
+def normalize(vector: VECTOR) -> VECTOR_NORMALIZED:
+    """
+    Normalize the given vector
+    """
+    magnitude = math.sqrt(
+        math.pow(
+            vector[0],
+            2
+        ) + math.pow(
+            vector[1],
+            2
+        )
+    )
+
+    vector_normalized = (
+        vector[0] / magnitude,
+        vector[1] / magnitude,
+    )
+
+    return vector_normalized
 
 
 def process(input_values: MATRIX) -> int:
