@@ -19,13 +19,14 @@ from aoc import (
 # Custom types
 POINT = tuple[int, int]
 VECTOR = tuple[int, int]
-ANTENNA = r"[a-zA-Z0-9]"
-ANTI_NODE = r"#"
-EMPTY_NODE = r"\."
-NODE = ANTENNA or ANTI_NODE or EMPTY_NODE
+NODE = str
 MATRIX = list[list[NODE]]
 ELEMENT = tuple[POINT, NODE]
-CIRCUIT = list[ELEMENT]
+LINE = list[ELEMENT]
+
+PATTERN_ANTENNA = r"[a-zA-Z0-9]"
+PATTERN_ANTI_NODE = r"#"
+PATTERN_EMPTY_NODE = r"\."
 
 
 def get_input_values(file_path: Path) -> MATRIX:
@@ -59,7 +60,7 @@ def get_antennas(matrix: MATRIX) -> list[ELEMENT]:
 
     for i, line in enumerate(matrix):
         for j, node in enumerate(line):
-            match = re.match(ANTENNA, node)
+            match = re.match(PATTERN_ANTENNA, node)
             if not match:
                 continue
             element = ((j, i), node)
@@ -68,19 +69,19 @@ def get_antennas(matrix: MATRIX) -> list[ELEMENT]:
     return elements
 
 
-def get_circuit(
+def get_line(
         matrix: MATRIX,
         point: POINT,
         vector: VECTOR,
         length: int = None,
-) -> CIRCUIT:
+) -> LINE:
     """
     Returns a cross-section from the `matrix` at the `point` in the direction of the `vector`.
     If `length` is specified, limit the amount of returned points.
     """
     x, y = point
     vx, vy = vector
-    circuit: CIRCUIT = []
+    circuit: LINE = []
 
     while True:
         if length is not None and len(circuit) >= length:
@@ -98,14 +99,14 @@ def get_circuit(
     return circuit
 
 
-def find_resonant_circuits(circuits: list[CIRCUIT]) -> list[CIRCUIT]:
+def find_resonant_circuits(circuits: list[LINE]) -> list[LINE]:
     """
     Returns a list of the circuits that have good vibrations
     """
     resonant_circuits = []
 
     for circuit in circuits:
-        nodes = [_[1] for _ in circuit if re.search(_[1], EMPTY_NODE)]
+        nodes = [_[1] for _ in circuit if re.search(_[1], PATTERN_EMPTY_NODE)]
         for _ in nodes:
             if nodes.count(_) > 1:
                 resonant_circuits.append(circuit)

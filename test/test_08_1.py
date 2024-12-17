@@ -8,8 +8,8 @@ from aoc_08_1 import (
     MATRIX,
     POINT,
     VECTOR,
-    get_circuit,
-    CIRCUIT,
+    get_line,
+    LINE,
     find_resonant_circuits,
     ELEMENT,
     get_antennas,
@@ -88,7 +88,7 @@ def matrix_3() -> MATRIX:
     ],
 )
 def test_get_cross_section(matrix_1: MATRIX, point: POINT, vector: VECTOR, length: int, expected: list[str]):
-    result = get_circuit(
+    result = get_line(
         matrix_1,
         point,
         vector,
@@ -109,11 +109,11 @@ def test_get_cross_section(matrix_1: MATRIX, point: POINT, vector: VECTOR, lengt
         ]
     ]
 )
-def test_get_resonant_circuits(matrix_2: MATRIX, point: POINT, vector: VECTOR, expected: list[CIRCUIT]):
+def test_get_resonant_circuits(matrix_2: MATRIX, point: POINT, vector: VECTOR, expected: list[LINE]):
     # Get circuits from matrix
     # TODO: Do separate check
     circuits = [
-        get_circuit(
+        get_line(
             matrix_2,
             point,
             vector,
