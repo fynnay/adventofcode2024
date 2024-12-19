@@ -190,8 +190,10 @@ def test_get_antennas(_matrix, expected: list[NODE]):
                 "..ba",
             ],
             {
-                frozenset([((1, 1), "b"), ((2,3), "b")]),
-            },
+                frozenset({((0, 0), 'a'), ((3, 3), 'a')}),
+                frozenset({((2, 3), 'b'), ((1, 1), 'b')})
+            }
+            ,
         ],
         [
             [

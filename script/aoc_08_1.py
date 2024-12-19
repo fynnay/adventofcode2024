@@ -230,7 +230,7 @@ def group_aligned_nodes(nodes: list[NODE]) -> set[frozenset[NODE]]:
                 pair = frozenset([node, node_similar[1]])
                 groups.add(pair)
                 continue
-            break
+            # break
 
     return groups
 
