@@ -187,15 +187,42 @@ def test_get_antennas(_matrix, expected: list[NODE]):
                 "..ba",
             ],
             {
-                frozenset([((1, 1), "b"), ((2,3), "b")])
+                frozenset([((1, 1), "b"), ((2,3), "b")]),
+            },
+        ],
+        [
+            [
+                "......#....#",
+                "...#....0...",
+                "....#0....#.",
+                "..#....0....",
+                "....0....#..",
+                ".#....A.....",
+                "...#........",
+                "#......#....",
+                "........A...",
+                ".........A..",
+                "..........#.",
+                "..........#.",
+            ],
+            {
+                frozenset([((8, 1), "0"), ((5, 2), "0")]),
+                frozenset([((8, 1), "0"), ((7, 3), "0")]),
+                frozenset([((8, 1), "0"), ((4, 4), "0")]),
+                frozenset([((5, 2), "0"), ((7, 3), "0")]),
+                frozenset([((5, 2), "0"), ((4, 4), "0")]),
+                frozenset([((7, 3), "0"), ((4, 4), "0")]),
+                frozenset([((6, 5), "A"), ((8, 8), "A")]),
+                frozenset([((6, 5), "A"), ((9, 9), "A")]),
+                frozenset([((8, 8), "A"), ((9, 9), "A")]),
             }
         ]
     ]
 )
 def test_group_aligned_nodes(_matrix, expected: list[NODE]):
     antennas = get_antennas(_matrix)
-    result = group_aligned_nodes(antennas)
-    assert result == expected
+    antennas_aligned = group_aligned_nodes(antennas)
+    assert antennas_aligned == expected
 
 
 def test_main():
