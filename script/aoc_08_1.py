@@ -11,6 +11,7 @@ How many unique anti-nodes can be placed within the bounds of the map?
 import math
 import re
 from pathlib import Path
+from typing import Iterable
 
 from aoc import (
     PuzzleName,
@@ -233,7 +234,7 @@ def group_aligned_nodes(nodes: list[NODE]) -> set[frozenset[NODE]]:
     return groups
 
 
-def place_anti_nodes(node_groups: list[tuple[NODE]]) -> set[NODE]:
+def place_anti_nodes(node_groups: Iterable[Iterable[NODE]]) -> set[NODE]:
     """
     Place 1 anti-node on the opposing sides of each node-group.
 
@@ -248,15 +249,27 @@ def place_anti_nodes(node_groups: list[tuple[NODE]]) -> set[NODE]:
     """
     anti_nodes: set[NODE] = set()
 
-    for group in node_groups:
-        for _ in range(2):
-            index = _ - _ % len(group)
-            node_1 = group[index]
-            node_2 = group[index + 1]
-            vector = get_vector(node_1, node_2[1])
-            pos = (node_2[0][0] + vector[0], node_2[0][1] + vector[0])
-            anti_node: NODE = frozenset((pos, "#"))
-            anti_nodes.add(anti_node)
+    for group in list(node_groups):
+        _nodes = list(group)
+        node_1 = _nodes[0]
+        node_2 = _nodes[1]
+        vector = get_vector(node_1[0], node_2[0])
+        anti_node_1 = (
+            (
+                node_1[0][0] + vector[0],
+                node_1[0][1] + vector[1],
+            ),
+            "#"
+        )
+        anti_node_2 = (
+            (
+                node_2[0][0] - vector[0],
+                node_2[0][1] - vector[1],
+            ),
+            "#"
+        )
+        anti_nodes.add(anti_node_1)
+        anti_nodes.add(anti_node_2)
 
     return anti_nodes
 

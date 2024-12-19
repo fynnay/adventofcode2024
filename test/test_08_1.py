@@ -13,6 +13,7 @@ from aoc_08_1 import (
     NODE,
     get_antennas,
     group_aligned_nodes,
+    place_anti_nodes,
 )
 
 
@@ -219,10 +220,56 @@ def test_get_antennas(_matrix, expected: list[NODE]):
         ]
     ]
 )
-def test_group_aligned_nodes(_matrix, expected: list[NODE]):
+def test_group_aligned_nodes(_matrix, expected: set[frozenset[NODE]]):
     antennas = get_antennas(_matrix)
     antennas_aligned = group_aligned_nodes(antennas)
     assert antennas_aligned == expected
+
+
+@pytest.mark.parametrize(
+    ["node_groups", "expected"],
+    [
+        [
+            {
+                frozenset([((8, 1), "0"), ((5, 2), "0")]),
+                frozenset([((8, 1), "0"), ((7, 3), "0")]),
+                frozenset([((8, 1), "0"), ((4, 4), "0")]),
+                frozenset([((5, 2), "0"), ((7, 3), "0")]),
+                frozenset([((5, 2), "0"), ((4, 4), "0")]),
+                frozenset([((7, 3), "0"), ((4, 4), "0")]),
+                frozenset([((6, 5), "A"), ((8, 8), "A")]),
+                frozenset([((6, 5), "A"), ((9, 9), "A")]),
+                frozenset([((8, 8), "A"), ((9, 9), "A")]),
+            },
+            {
+                ((6, 0), "#"),
+                ((11, 0), "#"),
+                ((3, 1), "#"),
+                ((4, 2), "#"),
+                ((10, 2), "#"),
+                ((2, 3), "#"),
+                ((9, 4), "#"),
+                ((1, 5), "#"),
+                ((6, 5), "#"),
+                ((3, 6), "#"),
+                ((0, 7), "#"),
+                ((7, 7), "#"),
+                ((10, 10), "#"),
+                ((10, 11), "#"),
+                # outside matrix
+                ((9, -1), "#"),
+                ((12, -2), "#"),
+                ((12, 13), "#"),
+            }
+        ]
+    ]
+)
+def test_place_anti_nodes(node_groups: set[frozenset[NODE]], expected: set[NODE]):
+    anti_nodes = place_anti_nodes(node_groups)
+    _matches = expected.intersection(anti_nodes)
+    _missing = expected.difference(anti_nodes)
+    _overflow = anti_nodes.difference(expected)
+    assert anti_nodes == expected
 
 
 def test_main():
