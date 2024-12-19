@@ -24,7 +24,6 @@ VECTOR_NORMALIZED = tuple[float, float]
 FREQUENCY = str
 MATRIX = list[list[FREQUENCY]]
 NODE = tuple[POINT, FREQUENCY]
-LINE = list[NODE]
 
 PATTERN_ANTENNA = r"[a-zA-Z0-9]"
 PATTERN_ANTI_NODE = r"#"
@@ -76,14 +75,14 @@ def get_line(
         point: POINT,
         vector: VECTOR,
         length: int = None,
-) -> LINE:
+) -> list[NODE]:
     """
     Returns a cross-section from the `matrix` at the `point` in the direction of the `vector`.
     If `length` is specified, limit the amount of returned points.
     """
     x, y = point
     vx, vy = vector
-    circuit: LINE = []
+    circuit: list[NODE] = []
 
     while True:
         if length is not None and len(circuit) >= length:
@@ -101,7 +100,7 @@ def get_line(
     return circuit
 
 
-def find_resonant_circuits(circuits: list[LINE]) -> list[LINE]:
+def find_resonant_circuits(circuits: list[list[NODE]]) -> list[list[NODE]]:
     """
     Returns a list of the circuits that have good vibrations
     """
