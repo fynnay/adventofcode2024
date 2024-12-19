@@ -128,7 +128,7 @@ def process(input_values: MATRIX) -> int:
     return len(input_values)
 
 
-def group_aligned_nodes(nodes: list[NODE]) -> set[frozenset[NODE]]:
+def group_aligned_nodes(nodes: list[NODE], skip_interrupted: bool = False) -> set[frozenset[NODE]]:
     """
     Each node is added to a group of exactly 2 nodes that:
 
@@ -171,18 +171,22 @@ def group_aligned_nodes(nodes: list[NODE]) -> set[frozenset[NODE]]:
                 nodes_others.append((vector_normalized, node_2))
 
         for node_similar in nodes_similar:
-            vector_1 = node_similar[0]
-            for node_other in nodes_others:
-                vector_2 = node_other[0]
-                # if rounded(vector_2) == rounded(vector_1):
-                #     # Signal is interrupted by antenna with different frequency
-                #     break
-            else:
-                # Register pair
-                pair = frozenset([node, node_similar[1]])
-                groups.add(pair)
+            # Skip nodes, whose signal is interrupted by a node with a different frequency
+            skip = False
+            if skip_interrupted is True:
+                vector_1 = node_similar[0]
+                for node_other in nodes_others:
+                    vector_2 = node_other[0]
+                    if rounded(vector_2) == rounded(vector_1):
+                        # Signal is interrupted by antenna with different frequency
+                        skip = True
+                        break
+            if skip is True:
                 continue
-            # break
+            # Register pair
+            pair = frozenset([node, node_similar[1]])
+            groups.add(pair)
+            continue
 
     return groups
 
