@@ -174,7 +174,7 @@ def process(input_values: MATRIX) -> int:
     return len(input_values)
 
 
-def group_aligned_nodes(nodes: list[NODE]) -> set[frozenset[NODE, NODE]]:
+def group_aligned_nodes(nodes: list[NODE]) -> set[frozenset[NODE]]:
     """
     Each node is added to a group of exactly 2 nodes that:
 
