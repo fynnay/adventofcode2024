@@ -6,10 +6,6 @@ import pytest
 import aoc
 from aoc_08_1 import (
     MATRIX,
-    POINT,
-    VECTOR,
-    get_line,
-    find_resonant_circuits,
     NODE,
     get_antennas,
     group_aligned_nodes,
@@ -70,88 +66,6 @@ def matrix_3() -> MATRIX:
     lines = [[i for i in _] for _ in text]
 
     return lines
-
-
-@pytest.fixture
-def matrix_4() -> MATRIX:
-    text = [
-        "......#....#",
-        "...#....0...",
-        "....#0....#.",
-        "..#....0....",
-        "....0....#..",
-        ".#....A.....",
-        "...#........",
-        "#......#....",
-        "........A...",
-        ".........A..",
-        "..........#.",
-        "..........#.",
-    ]
-
-    lines = [[i for i in _] for _ in text]
-
-    return lines
-
-
-@pytest.mark.parametrize(
-    ["point", "vector", "length", "expected"],
-    [
-        [(0, 0), (1, 1), None, ["1", "2", "3"]],
-        [(0, 0), (0, 1), None, ["1", "1", "1"]],
-        [(0, 0), (1, 0), None, ["1", "2", "3", "4", "5", "6"]],
-        [(0, 0), (2, 1), None, ["1", "3", "5"]],
-        [(0, 0), (2, 2), None, ["1", "3"]],
-        [(0, 0), (1, 1), 2, ["1", "2"]],
-        [(0, 0), (0, 1), 2, ["1", "1"]],
-        [(0, 0), (1, 0), 1, ["1"]],
-        [(0, 0), (2, 1), 0, []],
-        [(5, 2), (1, 1), None, ["6"]],
-        [(5, 2), (-1, -1), None, ["6", "5", "4"]],
-        [(5, 2), (-2, -1), None, ["6", "4", "2"]],
-        [(5, 2), (-2, -2), None, ["6", "4"]],
-    ],
-)
-def test_get_cross_section(matrix_1: MATRIX, point: POINT, vector: VECTOR, length: int, expected: list[str]):
-    result = get_line(
-        matrix_1,
-        point,
-        vector,
-        length,
-    )
-    frequencies = [_[1] for _ in result]
-    assert frequencies == expected
-
-
-@pytest.mark.parametrize(
-    ["point", "vector", "expected"],
-    [
-        [
-            (4, 3),
-            (1, 2),
-            [
-                ["a", "a", ".", "."],
-            ],
-        ]
-    ]
-)
-def test_get_resonant_circuits(matrix_2: MATRIX, point: POINT, vector: VECTOR, expected: list[list[NODE]]):
-    # Get circuits from matrix
-    # TODO: Do separate check
-    circuits = [
-        get_line(
-            matrix_2,
-            point,
-            vector,
-            None
-        )
-    ]
-
-    # Get resonant circuits and flatten nodes to check result
-    resonant_circuits = find_resonant_circuits(circuits)
-    nodes = [[a[1] for a in b] for b in resonant_circuits]
-
-    assert nodes == expected
 
 
 @pytest.mark.parametrize(

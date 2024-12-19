@@ -72,54 +72,6 @@ def get_antennas(matrix: MATRIX) -> list[NODE]:
     return nodes
 
 
-def get_line(
-        matrix: MATRIX,
-        point: POINT,
-        vector: VECTOR,
-        length: int = None,
-) -> list[NODE]:
-    """
-    Returns a cross-section from the `matrix` at the `point` in the direction of the `vector`.
-    If `length` is specified, limit the amount of returned points.
-    """
-    x, y = point
-    vx, vy = vector
-    circuit: list[NODE] = []
-
-    while True:
-        if length is not None and len(circuit) >= length:
-            break
-        if x < 0 or y < 0:
-            break
-        try:
-            entry = matrix[y][x]
-        except IndexError:
-            break
-        circuit.append(((x, y), entry))
-        x += vx
-        y += vy
-
-    return circuit
-
-
-def find_resonant_circuits(circuits: list[list[NODE]]) -> list[list[NODE]]:
-    """
-    Returns a list of the circuits that have good vibrations
-    """
-    resonant_circuits = []
-
-    for circuit in circuits:
-        frequencies = [_[1] for _ in circuit if re.search(_[1], PATTERN_EMPTY_NODE)]
-        for _ in frequencies:
-            if frequencies.count(_) > 1:
-                resonant_circuits.append(circuit)
-                break
-        else:
-            continue
-
-    return resonant_circuits
-
-
 def get_vector(point_1: POINT, point_2: POINT) -> VECTOR:
     """
     Returns the vector of point_1 to point_2
