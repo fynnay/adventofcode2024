@@ -25,6 +25,7 @@ VECTOR_NORMALIZED = tuple[float, float]
 FREQUENCY = str
 MATRIX = list[list[FREQUENCY]]
 NODE = tuple[POINT, FREQUENCY]
+RECTANGLE = ((int, int), (int, int))
 
 PATTERN_ANTENNA = r"[a-zA-Z0-9]"
 PATTERN_ANTI_NODE = r"#"
@@ -272,6 +273,28 @@ def place_anti_nodes(node_groups: Iterable[Iterable[NODE]]) -> set[NODE]:
         anti_nodes.add(anti_node_2)
 
     return anti_nodes
+
+
+def filter_far_nodes(nodes: Iterable[NODE], bounds: RECTANGLE) -> list[NODE]:
+    """
+    Returns only the nodes whose position is within the bounds
+
+    Args:
+        nodes: The nodes
+        bounds: ((min_x, min_y), (max_x, max_y))
+    """
+    nodes_filtered = []
+    min_x, min_y = bounds[0]
+    max_x, max_y = bounds[1]
+
+    for node in nodes:
+        x, y = node[0]
+        if not min_x <= x <= max_x or not min_y <= y <= max_y:
+            continue
+
+        nodes_filtered.append(node)
+
+    return nodes_filtered
 
 
 def process_2(input_values: MATRIX) -> int:

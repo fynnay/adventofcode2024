@@ -14,6 +14,8 @@ from aoc_08_1 import (
     get_antennas,
     group_aligned_nodes,
     place_anti_nodes,
+    RECTANGLE,
+    filter_far_nodes,
 )
 
 
@@ -271,6 +273,32 @@ def test_place_anti_nodes(node_groups: set[frozenset[NODE]], expected: set[NODE]
     _overflow = anti_nodes.difference(expected)
     assert anti_nodes == expected
 
+@pytest.mark.parametrize(
+    ["nodes", "bounds", "expected"],
+    [
+        [
+            [
+                ((10, 10), "#"),
+                ((10, 11), "#"),
+                # outside matrix
+                ((9, -1), "#"),
+                ((12, -2), "#"),
+                ((12, 13), "#"),
+            ],
+            (
+                    (0, 0),
+                    (11, 11)
+            ),
+            [
+                ((10, 10), "#"),
+                ((10, 11), "#"),
+            ],
+        ]
+    ]
+)
+def test_filter_far_nodes(nodes: list[NODE], bounds: RECTANGLE, expected: list[NODE]):
+    result = filter_far_nodes(nodes, bounds)
+    assert result == expected
 
 def test_main():
     puzzle_name = aoc.PuzzleName(
