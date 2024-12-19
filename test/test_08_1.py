@@ -12,6 +12,7 @@ from aoc_08_1 import (
     find_resonant_circuits,
     NODE,
     get_antennas,
+    group_aligned_nodes,
 )
 
 
@@ -185,14 +186,15 @@ def test_get_antennas(_matrix, expected: list[NODE]):
                 "....",
                 "..ba",
             ],
-            [
-                [((1,1), "b"), ((2,3), "b")]
-            ]
+            {
+                frozenset([((1, 1), "b"), ((2,3), "b")])
+            }
         ]
     ]
 )
-def test_get_resonating_antennas(_matrix, expected: list[NODE]):
-    result = get_resonating_antennas()
+def test_group_aligned_nodes(_matrix, expected: list[NODE]):
+    antennas = get_antennas(_matrix)
+    result = group_aligned_nodes(antennas)
     assert result == expected
 
 

@@ -157,13 +157,80 @@ def normalized(vector: VECTOR, scaled: bool = False) -> VECTOR_NORMALIZED:
     return vector_normalized
 
 
-def rounded(vector: VECTOR_NORMALIZED) -> VECTOR:
-    return int(round(vector[0])), int(round(vector[1]))
+def rounded(vector: VECTOR_NORMALIZED, precision: int = 6) -> VECTOR_NORMALIZED:
+    """
+    Returns the vector rounded to the amount of decimals specified by precision
+    Args:
+        vector: A (normalized) vector
+        precision: The number of decimals to round to
+    """
+    multiplier = 10 * precision
+    vector_rounded = (round(vector[0] * multiplier) / multiplier, round(vector[1] * multiplier) / multiplier)
+    return vector_rounded
 
 
 def process(input_values: MATRIX) -> int:
     show_matrix(input_values)
     return len(input_values)
+
+
+def group_aligned_nodes(nodes: list[NODE]) -> set[frozenset[NODE, NODE]]:
+    """
+    Each node is added to a group of exactly 2 nodes that:
+
+    - Are placed on a straight line
+    - Are not interrupted by other frequencies
+    - A node can be part of multiple groups, but two groups can't contain the exact same nodes
+
+    Returns:
+        For example:
+        [
+            {  # GROUP_1
+                {((0,0), "a"), ((2, 2), "a")},
+                {((0,0), "a"), ((0, 5), "a")},
+            },
+            {  # GROUP_2
+                {...},
+            }
+        ]
+
+    """
+    groups = set()
+
+    for node in nodes:
+        frequency = node[1]
+
+        # Get all other nodes' vector to this one
+        nodes_similar: list[tuple[VECTOR_NORMALIZED, NODE]] = []
+        nodes_others: list[tuple[VECTOR_NORMALIZED, NODE]] = []
+
+        for node_2 in nodes:
+            # Skip this node
+            if node_2 == node:
+                continue
+            frequency_2 = node_2[1]
+            vector = get_vector(node[0], node_2[0])
+            vector_normalized = normalized(vector)
+            if frequency_2 == frequency:
+                nodes_similar.append((vector_normalized, node_2))
+            else:
+                nodes_others.append((vector_normalized, node_2))
+
+        for node_similar in nodes_similar:
+            vector_1 = node_similar[0]
+            for node_other in nodes_others:
+                vector_2 = node_other[0]
+                if rounded(vector_2) == rounded(vector_1):
+                    # Signal is interrupted by antenna with different frequency
+                    break
+            else:
+                # Register pair
+                pair = frozenset([node, node_similar[1]])
+                groups.add(pair)
+                continue
+            break
+
+    return groups
 
 
 def process_2(input_values: MATRIX) -> int:
