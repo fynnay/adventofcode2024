@@ -116,7 +116,8 @@ def test_get_cross_section(matrix_1: MATRIX, point: POINT, vector: VECTOR, lengt
         vector,
         length,
     )
-    assert result == expected
+    frequencies = [_[1] for _ in result]
+    assert frequencies == expected
 
 
 @pytest.mark.parametrize(
