@@ -233,6 +233,34 @@ def group_aligned_nodes(nodes: list[NODE]) -> set[frozenset[NODE]]:
     return groups
 
 
+def place_anti_nodes(node_groups: list[tuple[NODE]]) -> set[NODE]:
+    """
+    Place 1 anti-node on the opposing sides of each node-group.
+
+    To get the anti-node's position:
+
+    - Get the vector from node_1 -> node_2
+    - Add that vector to the point of node_2
+    - Repeat for node_2 -> node_1
+
+    Returns:
+        Set of unique anti-nodes
+    """
+    anti_nodes: set[NODE] = set()
+
+    for group in node_groups:
+        for _ in range(2):
+            index = _ - _ % len(group)
+            node_1 = group[index]
+            node_2 = group[index + 1]
+            vector = get_vector(node_1, node_2[1])
+            pos = (node_2[0][0] + vector[0], node_2[0][1] + vector[0])
+            anti_node: NODE = frozenset((pos, "#"))
+            anti_nodes.add(anti_node)
+
+    return anti_nodes
+
+
 def process_2(input_values: MATRIX) -> int:
     """
     - Get all antenna points
