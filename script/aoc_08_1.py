@@ -123,11 +123,6 @@ def rounded(vector: VECTOR_NORMALIZED, precision: int = 6) -> VECTOR_NORMALIZED:
     return vector_rounded
 
 
-def process(input_values: MATRIX) -> int:
-    show_matrix(input_values)
-    return len(input_values)
-
-
 def group_aligned_nodes(nodes: list[NODE], skip_interrupted: bool = False) -> set[frozenset[NODE]]:
     """
     Each node is added to a group of exactly 2 nodes that:
@@ -253,7 +248,7 @@ def filter_far_nodes(nodes: Iterable[NODE], bounds: RECTANGLE) -> list[NODE]:
     return nodes_filtered
 
 
-def process_2(input_values: MATRIX) -> int:
+def process(input_values: MATRIX) -> int:
     """
     - Get all antenna points
     - Find antennas with same FREQUENCY
@@ -289,7 +284,7 @@ def main(file_path: Path | None = None):
         )
     )
     input_values = get_input_values(file_path)
-    result = process_2(input_values)
+    result = process(input_values)
     return result
 
 
