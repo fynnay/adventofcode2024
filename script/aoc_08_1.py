@@ -222,9 +222,9 @@ def group_aligned_nodes(nodes: list[NODE]) -> set[frozenset[NODE]]:
             vector_1 = node_similar[0]
             for node_other in nodes_others:
                 vector_2 = node_other[0]
-                if rounded(vector_2) == rounded(vector_1):
-                    # Signal is interrupted by antenna with different frequency
-                    break
+                # if rounded(vector_2) == rounded(vector_1):
+                #     # Signal is interrupted by antenna with different frequency
+                #     break
             else:
                 # Register pair
                 pair = frozenset([node, node_similar[1]])
@@ -308,33 +308,18 @@ def process_2(input_values: MATRIX) -> int:
     # Get all antennas
     antennas = get_antennas(input_values)
 
-    # Group antennas by FREQUENCY
-    antenna_groups: dict[str, list[NODE]] = {}
-    for _ in antennas:
-        frequency = _[1]
-        antenna_groups.setdefault(frequency, [])
-        antenna_groups[frequency].append(_)
+    # Group antennas by frequency
+    antennas_grouped = group_aligned_nodes(antennas)
 
-    # Find antennas with matching frequency
-    for frequency, group in antenna_groups.items():
-        for node in group:
-            point_1 = node[0]
-            other_antennas = [_ for _ in group if _ != node]
-            for antenna_2 in other_antennas:
-                point_2 = antenna_2[0]
-                vector = get_vector(point_1, point_2)
-                vector_normalized = normalized(vector)
-                vector_rounded = rounded(vector_normalized)
-                # Check whether there are any obstructions in line of sight
-                line = get_line(
-                    input_values,
-                    point_2,
-                    vector_rounded,
-                )
-                print(vector, vector_normalized)
+    # Place anti-nodes
+    anti_nodes = place_anti_nodes(antennas_grouped)
 
-    # TODO: Place anti-nodes
-    return len(antenna_groups)
+    # Filter out-of-bounds anti-nodes
+    max_x = len(input_values[0]) - 1
+    max_y = len(input_values) - 1
+    anti_nodes_filtered = filter_far_nodes(anti_nodes, ((0, 0), (max_x, max_y)))
+
+    return len(anti_nodes_filtered)
 
 
 def main(file_path: Path | None = None):
