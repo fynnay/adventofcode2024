@@ -21,10 +21,10 @@ from aoc import (
 POINT = tuple[int, int]
 VECTOR = tuple[int, int]
 VECTOR_NORMALIZED = tuple[float, float]
-NODE = str
-MATRIX = list[list[NODE]]
-ELEMENT = tuple[POINT, NODE]
-LINE = list[ELEMENT]
+FREQUENCY = str
+MATRIX = list[list[FREQUENCY]]
+NODE = tuple[POINT, FREQUENCY]
+LINE = list[NODE]
 
 PATTERN_ANTENNA = r"[a-zA-Z0-9]"
 PATTERN_ANTI_NODE = r"#"
@@ -54,21 +54,21 @@ def show_matrix(
         print("".join(line))
 
 
-def get_antennas(matrix: MATRIX) -> list[ELEMENT]:
+def get_antennas(matrix: MATRIX) -> list[NODE]:
     """
-    Returns a list of ELEMENTS for each ANTENNA in the MATRIX
+    Returns a list of NODE in the MATRIX for each FREQUENCY matching the PATTERN_ANTENNA
     """
-    elements: list[ELEMENT] = []
+    nodes: list[NODE] = []
 
     for i, line in enumerate(matrix):
-        for j, node in enumerate(line):
-            match = re.match(PATTERN_ANTENNA, node)
+        for j, frequency in enumerate(line):
+            match = re.match(PATTERN_ANTENNA, frequency)
             if not match:
                 continue
-            element = ((j, i), node)
-            elements.append(element)
+            node = ((j, i), frequency)
+            nodes.append(node)
 
-    return elements
+    return nodes
 
 
 def get_line(
@@ -108,9 +108,9 @@ def find_resonant_circuits(circuits: list[LINE]) -> list[LINE]:
     resonant_circuits = []
 
     for circuit in circuits:
-        nodes = [_[1] for _ in circuit if re.search(_[1], PATTERN_EMPTY_NODE)]
-        for _ in nodes:
-            if nodes.count(_) > 1:
+        frequencies = [_[1] for _ in circuit if re.search(_[1], PATTERN_EMPTY_NODE)]
+        for _ in frequencies:
+            if frequencies.count(_) > 1:
                 resonant_circuits.append(circuit)
                 break
         else:
@@ -170,7 +170,7 @@ def process(input_values: MATRIX) -> int:
 def process_2(input_values: MATRIX) -> int:
     """
     - Get all antenna points
-    - Find antennas with same ID
+    - Find antennas with same FREQUENCY
     - Find antennas with direct line of sight
     - Place anti-nodes on either side, within bounds of map
     - Count number of anti-nodes within bounds of map
@@ -178,21 +178,18 @@ def process_2(input_values: MATRIX) -> int:
     # Get all antennas
     antennas = get_antennas(input_values)
 
-    # Group antennas by NODE
-    antenna_groups: dict[str, list[ELEMENT]] = {}
+    # Group antennas by FREQUENCY
+    antenna_groups: dict[str, list[NODE]] = {}
     for _ in antennas:
-        node = _[1]
-        antenna_groups.setdefault(node, [])
-        antenna_groups[node].append(_)
+        frequency = _[1]
+        antenna_groups.setdefault(frequency, [])
+        antenna_groups[frequency].append(_)
 
-    # Filter resonating antennas (with direct line of sight)
-    max_x = len(input_values[0])
-    max_y = len(input_values)
-
-    for node, group in antenna_groups.items():
-        for antenna_1 in group:
-            point_1 = antenna_1[0]
-            other_antennas = [_ for _ in group if _ != antenna_1]
+    # Find antennas with matching frequency
+    for frequency, group in antenna_groups.items():
+        for node in group:
+            point_1 = node[0]
+            other_antennas = [_ for _ in group if _ != node]
             for antenna_2 in other_antennas:
                 point_2 = antenna_2[0]
                 vector = get_vector(point_1, point_2)

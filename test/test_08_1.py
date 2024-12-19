@@ -11,7 +11,7 @@ from aoc_08_1 import (
     get_line,
     LINE,
     find_resonant_circuits,
-    ELEMENT,
+    NODE,
     get_antennas,
 )
 
@@ -62,6 +62,28 @@ def matrix_3() -> MATRIX:
         "......#...",
         "..........",
         "..........",
+    ]
+
+    lines = [[i for i in _] for _ in text]
+
+    return lines
+
+
+@pytest.fixture
+def matrix_4() -> MATRIX:
+    text = [
+        "......#....#",
+        "...#....0...",
+        "....#0....#.",
+        "..#....0....",
+        "....0....#..",
+        ".#....A.....",
+        "...#........",
+        "#......#....",
+        "........A...",
+        ".........A..",
+        "..........#.",
+        "..........#.",
     ]
 
     lines = [[i for i in _] for _ in text]
@@ -146,7 +168,7 @@ def test_get_resonant_circuits(matrix_2: MATRIX, point: POINT, vector: VECTOR, e
         ]
     ]
 )
-def test_get_antennas(_matrix, expected: list[ELEMENT]):
+def test_get_antennas(_matrix, expected: list[NODE]):
     antennas = get_antennas(
         _matrix
     )
@@ -169,7 +191,7 @@ def test_get_antennas(_matrix, expected: list[ELEMENT]):
         ]
     ]
 )
-def test_get_resonating_antennas(_matrix, expected: list[ELEMENT]):
+def test_get_resonating_antennas(_matrix, expected: list[NODE]):
     result = get_resonating_antennas()
     assert result == expected
 
