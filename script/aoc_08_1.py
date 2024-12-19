@@ -150,8 +150,8 @@ def normalized(vector: VECTOR, scaled: bool = False) -> VECTOR_NORMALIZED:
             )
         )
         vector_normalized = (
-            vector[0] / magnitude,
-            vector[1] / magnitude,
+            vector[0] if magnitude == 0 else vector[0] / magnitude,
+            vector[0] if magnitude == 0 else vector[1] / magnitude,
         )
 
     return vector_normalized
