@@ -6,15 +6,32 @@ from aoc import (
 )
 
 
-def get_input_values(file_path: Path):
+def get_input_values(file_path: Path) -> list[str]:
     values = []
 
     with open(file_path, 'r') as file:
         for line in file.readlines():
             if not line:
                 continue
+            values += [_ for _ in line if _]
 
     return values
+
+
+def unpack(input_values: list[str]) -> list[str]:
+    unpacked_values: list[str] = []
+
+    for index, _ in enumerate(input_values):
+        uid = int(index / 2)
+        is_free = (index + 1) % 2 == 0
+        if is_free:
+            value = "."
+        else:
+            value = f"{uid}"
+        size = int(_)
+        unpacked_values += [value] * size
+
+    return unpacked_values
 
 
 def main(file_path: Path | None = None):

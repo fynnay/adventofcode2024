@@ -4,38 +4,49 @@ from importlib import util
 import pytest
 import aoc
 
-
-@pytest.fixture
-def input_value():
-    return "12345"
+from aoc_09_1 import unpack
 
 
 @pytest.fixture
-def unpacked_value():
-    return "0..111....22222"
+def input_values():
+    return list("12345")
 
 
 @pytest.fixture
-def reordered_value():
-    return ""\
-        "0..111....22222"\
-        "02.111....2222."\
-        "022111....222.."\
-        "0221112...22..."\
-        "02211122..2...."\
+def unpacked_values():
+    return list("0..111....22222")
+
+
+@pytest.fixture
+def reordered_values():
+    return list(
+        "0..111....22222"
+        "02.111....2222."
+        "022111....222.."
+        "0221112...22..."
+        "02211122..2...."
         "022111222......"
+    )
 
 
-def test_unpack(input_value):
+def test_unpack(input_values: list[str],
+                unpacked_values
+                ):
+    result = unpack(input_values)
+    assert result == unpacked_values
+
+
+def test_reorder(
+        unpacked_values
+        ):
     pass
 
 
-def test_reorder(unpacked_value):
+def test_checksum(
+        reordered_values
+        ):
     pass
 
-
-def test_checksum(reordered_value):
-    pass
 
 def test_main():
     puzzle_name = aoc.PuzzleName(
