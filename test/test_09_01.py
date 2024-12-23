@@ -4,7 +4,7 @@ from importlib import util
 import pytest
 
 import aoc
-from aoc_09_1 import unpack, reorder
+from aoc_09_1 import unpack, reorder, checksum
 
 
 @pytest.fixture
@@ -29,6 +29,11 @@ def reordered_values():
     ]
 
 
+@pytest.fixture
+def checksum_value() -> int:
+    return 7
+
+
 def test_unpack(input_values: list[str],
                 unpacked_values
                 ):
@@ -45,9 +50,10 @@ def test_reorder(
 
 
 def test_checksum(
-        reordered_values
+        reordered_values: list[str],
+        checksum_value: int,
         ):
-    pass
+    assert checksum(reordered_values[-1]) == checksum_value
 
 
 def test_main():

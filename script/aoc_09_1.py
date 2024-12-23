@@ -59,6 +59,20 @@ def reorder(unpacked_values: list[str]) -> list[list[str]]:
     return reordering_steps
 
 
+def checksum(reordered_values: list[str]) -> int:
+    values = []
+
+    for _ in range(0, len(reordered_values), 2):
+        a = reordered_values[_]
+        b = reordered_values[_ + 1]
+        if not a.isnumeric() or not b.isnumeric():
+            break
+        r = int(a) * int(b)
+        values.append(r)
+
+    return sum(values)
+
+
 def main(file_path: Path | None = None):
     script_path = Path(__file__)
     puzzle_name = PuzzleName.parse(script_path.stem)
