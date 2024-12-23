@@ -2,9 +2,9 @@ import sys
 from importlib import util
 
 import pytest
-import aoc
 
-from aoc_09_1 import unpack
+import aoc
+from aoc_09_1 import unpack, reorder
 
 
 @pytest.fixture
@@ -19,14 +19,14 @@ def unpacked_values():
 
 @pytest.fixture
 def reordered_values():
-    return list(
-        "0..111....22222"
-        "02.111....2222."
-        "022111....222.."
-        "0221112...22..."
-        "02211122..2...."
-        "022111222......"
-    )
+    return [
+        list("0..111....22222"),
+        list("02.111....2222."),
+        list("022111....222.."),
+        list("0221112...22..."),
+        list("02211122..2...."),
+        list("022111222......"),
+    ]
 
 
 def test_unpack(input_values: list[str],
@@ -37,9 +37,11 @@ def test_unpack(input_values: list[str],
 
 
 def test_reorder(
-        unpacked_values
+        unpacked_values: list[str],
+        reordered_values: list[str],
         ):
-    pass
+    result = reorder(unpacked_values)
+    assert result == reordered_values
 
 
 def test_checksum(

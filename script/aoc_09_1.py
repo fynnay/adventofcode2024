@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 from aoc import (
@@ -32,6 +33,30 @@ def unpack(input_values: list[str]) -> list[str]:
         unpacked_values += [value] * size
 
     return unpacked_values
+
+
+def reorder(unpacked_values: list[str]) -> list[list[str]]:
+    reordering_steps: list[list[str]] = []
+    reordered_values: list[str] = list(unpacked_values)
+
+    for index, value in enumerate(unpacked_values):
+        if value != ".":
+            continue
+
+        reordering_steps.append(list(reordered_values))
+
+        data_matches = re.finditer(r"\d", "".join(reordered_values))
+        matches = list(data_matches)
+        data_index = matches[-1].regs[0][1]
+        data_value = reordered_values[data_index - 1]
+        if data_index < index:
+            break
+        reordered_values.pop(data_index - 1)
+        reordered_values.insert(data_index, ".")
+        reordered_values.pop(index)
+        reordered_values.insert(index, data_value)
+
+    return reordering_steps
 
 
 def main(file_path: Path | None = None):
