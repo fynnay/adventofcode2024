@@ -59,7 +59,7 @@ def reorder(unpacked_values: list[str]) -> list[list[str]]:
     return reordering_steps
 
 
-def checksum(reordered_values: list[str]) -> int:
+def calculate_checksum(reordered_values: list[str]) -> int:
     values = []
 
     for _ in range(0, len(reordered_values), 2):

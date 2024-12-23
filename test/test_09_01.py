@@ -53,7 +53,7 @@ def test_checksum(
         reordered_values: list[str],
         checksum_value: int,
         ):
-    assert checksum(reordered_values[-1]) == checksum_value
+    assert calculate_checksum(reordered_values[-1]) == checksum_value
 
 
 def test_main():
