@@ -4,12 +4,16 @@ from importlib import util
 import pytest
 
 import aoc
-from aoc_09_1 import unpack, reorder, checksum
+from aoc_09_1 import unpack, reorder, calculate_checksum
 
 
-@pytest.fixture
-def input_values():
-    return list("12345")
+@pytest.fixture(scope="module", params=["short", "long"])
+def input_values(request: pytest.FixtureRequest):
+    values = {
+        "short": list("12345"),
+        "long": list("01234567891")
+    }
+    yield values.get(request.param)
 
 
 @pytest.fixture
@@ -58,7 +62,7 @@ def test_checksum(
 
 def test_main():
     puzzle_name = aoc.PuzzleName(
-        day=0,
+        day=9,
         part=1,
     )
     puzzle_name_text = puzzle_name.build()
