@@ -45,12 +45,16 @@ def reorder(unpacked_values: list[str]) -> list[list[str]]:
 
         reordering_steps.append(list(reordered_values))
 
-        data_matches = re.finditer(r"\d", "".join(reordered_values))
-        matches = list(data_matches)
-        data_index = matches[-1].regs[0][1]
-        data_value = reordered_values[data_index - 1]
+        reverse_index = len(reordered_values)
+        for reverse_index, _ in enumerate(reversed(reordered_values)):
+            if _ != ".":
+                break
+
+        data_index = len(reordered_values) - reverse_index
         if data_index < index:
             break
+
+        data_value = reordered_values[data_index - 1]
         reordered_values.pop(data_index - 1)
         reordered_values.insert(data_index, ".")
         reordered_values.pop(index)
