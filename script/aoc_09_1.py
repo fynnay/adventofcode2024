@@ -95,7 +95,7 @@ def calculate_checksum(reordered_values: list[str]) -> int:
 def process(input_values: list[str]):
     logger.info("Processing...")
     unpacked_values = unpack(input_values)
-    reordered_values = reorder(unpacked_values)[-1]
+    reordered_values = reorder(unpacked_values)
     checksum = calculate_checksum(reordered_values)
     return checksum
 

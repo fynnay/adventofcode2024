@@ -87,4 +87,4 @@ def test_main():
     spec.loader.exec_module(module)
 
     result = module.main(input_file)
-    assert result == 2500
+    assert result == 6366665108136
