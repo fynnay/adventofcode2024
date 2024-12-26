@@ -39,6 +39,7 @@ def reorder(unpacked_values: list[str]) -> list[list[str]]:
     reordering_steps: list[list[str]] = []
     reordered_values: list[str] = list(unpacked_values)
 
+    num_indexes = len(unpacked_values) - 1
     for index, value in enumerate(unpacked_values):
         if value != ".":
             continue
@@ -46,21 +47,20 @@ def reorder(unpacked_values: list[str]) -> list[list[str]]:
         reordering_steps.append(list(reordered_values))
 
         reverse_index = len(reordered_values)
-        for reverse_index, _ in enumerate(reversed(reordered_values)):
-            if _ != ".":
+        for reverse_index, data_value in enumerate(reversed(reordered_values)):
+            if data_value != ".":
                 break
 
-        data_index = len(reordered_values) - reverse_index
+        data_index = num_indexes - reverse_index
         if data_index < index:
             break
 
-        data_value = reordered_values[data_index - 1]
-        reordered_values.pop(data_index - 1)
+        reordered_values.pop(data_index)
         reordered_values.insert(data_index, ".")
         reordered_values.pop(index)
         reordered_values.insert(index, data_value)
 
-    return reordering_steps
+    return reordered_values
 
 
 def calculate_checksum(reordered_values: list[str]) -> int:
