@@ -30,7 +30,7 @@ def unpack(input_values: list[str]) -> list[str]:
         else:
             value = f"{uid}"
         size = int(_)
-        unpacked_values += [value] * size
+        unpacked_values += [value] * max(size, 1)
 
     return unpacked_values
 
