@@ -46,10 +46,10 @@ def reorder(unpacked_values: list[str]) -> list[list[str]]:
 
     num_indexes = len(unpacked_values) - 1
     for index, value in enumerate(unpacked_values):
+        logger.debug(f"{index}/{num_indexes}: {value}")
+
         if value != ".":
             continue
-
-        logger.debug(f"{index}/{num_indexes}: {value}")
 
         # yield reordered_values
 
@@ -74,7 +74,11 @@ def calculate_checksum(reordered_values: list[str]) -> int:
     logger.info("calculating...")
     values = []
 
-    for _ in range(0, len(reordered_values), 2):
+    num_values = len(reordered_values)
+    num_indexes = num_values - 1
+    for _ in range(0, num_values, 2):
+        if _ >= num_indexes:
+            break
         a = reordered_values[_]
         b = reordered_values[_ + 1]
         if not a.isnumeric() or not b.isnumeric():

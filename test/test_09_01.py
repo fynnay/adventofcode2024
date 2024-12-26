@@ -11,6 +11,7 @@ from aoc_09_1 import unpack, reorder, calculate_checksum
 class ValueType(Enum):
     SHORT = "short"
     LONG = "long"
+    UNEVEN = "uneven"
 
 
 class Value:
@@ -34,6 +35,11 @@ class Value:
             self.unpacked = ["0", ".", "1", ".", "2", ".", "3", ".", "4", ".", "5", ".", "6", ".", "7", ".", "8", ".", "9", ".", "10", ".", "11", "."]
             self.reordered = ["0", "11", "1", "10", "2", "9", "3", "8", "4", "7", "5", "6", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."]
             self.checksum = 0+10+18+24+28+30
+        elif value_type == ValueType.UNEVEN:
+            self.input = list("013")
+            self.unpacked = ["0", ".", "1", "1", "1"]
+            self.reordered = ["0", "1", "1", "1", "."]
+            self.checksum = 0+1+0
 
 
 @pytest.fixture(scope="module", params=ValueType)
