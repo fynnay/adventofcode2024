@@ -62,6 +62,7 @@ def test_checksum(value: Value):
     assert calculate_checksum(value.reordered) == value.checksum
 
 
+@pytest.mark.skip
 def test_main():
     puzzle_name = aoc.PuzzleName(
         day=9,

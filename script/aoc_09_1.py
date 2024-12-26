@@ -89,6 +89,14 @@ def calculate_checksum(reordered_values: list[str]) -> int:
     return sum(values)
 
 
+def process(input_values: list[str]):
+    logger.info("Processing...")
+    unpacked_values = unpack(input_values)
+    reordered_values = reorder(unpacked_values)[-1]
+    checksum = calculate_checksum(reordered_values)
+    return checksum
+
+
 def main(file_path: Path | None = None):
     script_path = Path(__file__)
     puzzle_name = PuzzleName.parse(script_path.stem)
@@ -99,7 +107,8 @@ def main(file_path: Path | None = None):
             part=puzzle_name.part,
         )
     )
-    result = "I am result"
+    input_values = get_input_values(file_path)
+    result = process(input_values)
     return result
 
 
