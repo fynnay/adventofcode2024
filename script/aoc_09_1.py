@@ -42,31 +42,40 @@ def unpack(input_values: list[str]) -> list[str]:
 
 def reorder(unpacked_values: list[str]) -> list[list[str]]:
     logger.info("reordering...")
-    reordered_values: list[str] = list(unpacked_values)
 
-    num_indexes = len(unpacked_values) - 1
+    num_indexes: int = len(unpacked_values) - 1
+    data_index: int = num_indexes
+    data_sorted: list[str] = []
+
     for index, value in enumerate(unpacked_values):
         logger.debug(f"{index}/{num_indexes}: {value}")
 
-        if value != ".":
-            continue
-
-        # yield reordered_values
-
-        reverse_index = len(reordered_values)
-        for reverse_index, data_value in enumerate(reversed(reordered_values)):
-            if data_value != ".":
-                break
-
-        data_index = num_indexes - reverse_index
+        # Cancel if we have crossed the current index
         if data_index < index:
             break
 
-        reordered_values.pop(data_index)
-        reordered_values.insert(data_index, ".")
-        reordered_values.pop(index)
-        reordered_values.insert(index, data_value)
+        # Existing data stays where it is
+        if value != ".":
+            data_sorted.append(value)
+            continue
 
+        # Pick data from end of file to fill free space
+        for _ in range(data_index, 0, -1):
+            data_value = unpacked_values[_]
+            if data_value != ".":
+                data_index = _
+                break
+
+        # Cancel if we have crossed the current index while searching for data
+        if data_index < index:
+            break
+
+        data_sorted.append(data_value)
+        data_index -= 1
+
+    free_space_amount = len(unpacked_values) - len(data_sorted)
+    free_space = ["."] * free_space_amount
+    reordered_values = data_sorted + free_space
     return reordered_values
 
 
