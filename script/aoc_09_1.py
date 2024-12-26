@@ -35,7 +35,7 @@ def unpack(input_values: list[str]) -> list[str]:
         else:
             value = f"{uid}"
         size = int(_)
-        unpacked_values += [value] * max(size, 1)
+        unpacked_values += [value] * size
 
     return unpacked_values
 
@@ -72,21 +72,15 @@ def reorder(unpacked_values: list[str]) -> list[list[str]]:
 
 def calculate_checksum(reordered_values: list[str]) -> int:
     logger.info("calculating...")
-    values = []
+    total = 0
 
-    num_values = len(reordered_values)
-    num_indexes = num_values - 1
-    for _ in range(0, num_values, 2):
-        if _ >= num_indexes:
+    for index, uid in enumerate(reordered_values):
+        if not uid.isnumeric():
             break
-        a = reordered_values[_]
-        b = reordered_values[_ + 1]
-        if not a.isnumeric() or not b.isnumeric():
-            break
-        r = int(a) * int(b)
-        values.append(r)
+        r = index * int(uid)
+        total += r
 
-    return sum(values)
+    return total
 
 
 def process(input_values: list[str]):
