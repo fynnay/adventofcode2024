@@ -5,6 +5,10 @@ from aoc import (
     PuzzleName,
     Dir,
 )
+import logging
+
+logging.basicConfig(format="%(asctime)s [%(levelname)s] %(message)s", level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 def get_input_values(file_path: Path) -> list[str]:
@@ -20,6 +24,7 @@ def get_input_values(file_path: Path) -> list[str]:
 
 
 def unpack(input_values: list[str]) -> list[str]:
+    logger.info("unpacking...")
     unpacked_values: list[str] = []
 
     for index, _ in enumerate(input_values):
@@ -36,7 +41,7 @@ def unpack(input_values: list[str]) -> list[str]:
 
 
 def reorder(unpacked_values: list[str]) -> list[list[str]]:
-    reordering_steps: list[list[str]] = []
+    logger.info("reordering...")
     reordered_values: list[str] = list(unpacked_values)
 
     num_indexes = len(unpacked_values) - 1
@@ -44,7 +49,9 @@ def reorder(unpacked_values: list[str]) -> list[list[str]]:
         if value != ".":
             continue
 
-        reordering_steps.append(list(reordered_values))
+        logger.debug(f"{index}/{num_indexes}: {value}")
+
+        # yield reordered_values
 
         reverse_index = len(reordered_values)
         for reverse_index, data_value in enumerate(reversed(reordered_values)):
@@ -64,6 +71,7 @@ def reorder(unpacked_values: list[str]) -> list[list[str]]:
 
 
 def calculate_checksum(reordered_values: list[str]) -> int:
+    logger.info("calculating...")
     values = []
 
     for _ in range(0, len(reordered_values), 2):
