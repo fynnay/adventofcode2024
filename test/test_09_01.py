@@ -1,4 +1,5 @@
 import sys
+from enum import Enum
 from importlib import util
 
 import pytest
@@ -7,7 +8,50 @@ import aoc
 from aoc_09_1 import unpack, reorder, calculate_checksum
 
 
-@pytest.fixture(scope="module", params=["short", "long"])
+class ValueType(Enum):
+    SHORT = "short"
+    LONG = "long"
+
+
+class Value:
+    def __init__(
+            self,
+            value_type: ValueType,
+    ):
+        self.value_type = value_type
+        self.input: list[str]
+        self.unpacked: list[str]
+        self.reordered: list[list[str]]
+        self.checksum: int
+
+        if value_type == ValueType.SHORT:
+            self.input = list("12345")
+            self.unpacked = list("0..111....22222")
+            self.reordered = [
+                list("0..111....22222"),
+                list("02.111....2222."),
+                list("022111....222.."),
+                list("0221112...22..."),
+                list("02211122..2...."),
+                list("022111222......"),
+            ]
+            self.checksum = 7
+        elif value_type == ValueType.LONG:
+            self.input = list("01234567891")
+            self.unpacked = [
+                "0", ".", "2", "2", ".", ".", ".", "4", "4", "4", "4", ".", ".", ".", ".", ".", "6", "6", "6", "6",
+                "6", "6", ".", ".", ".", ".", ".", ".", ".", "8", "8", "8", "8", "8", "8", "8", "8", ".", ".", ".",
+                ".", ".", ".", ".", ".", ".", "11", "11", "11", "11","11", "11", "11", "11", "11", "11"
+            ]
+            self.reordered = [
+                "0", "11", "2", "2", "11", "11", "11", "4", "4", "4", "4", "11", "11", "11", "11", "11", "6", "6", "6", "6",
+                "6", "6", "11", "8", "8", "8", "8", "8", "8", "8", "8", ".", ".", ".", ".", ".", ".", ".", ".", ".",
+                ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."
+            ]
+            self.checksum = 859
+
+
+@pytest.fixture(scope="module", params=ValueType)
 def input_values(request: pytest.FixtureRequest):
     values = {
         "short": list("12345"),
