@@ -18,11 +18,11 @@ class TestCase(Enum):
 class Values:
     def __init__(self, case_type: TestCase):
         self.case_type = case_type
-        self.input: aoc_10_1.MAP = []
+        self.lines: aoc_10_1.MAP = []
         self.score: int = 0
 
         if case_type is TestCase.A:
-            self.input = [
+            self.lines = [
                 "0123",
                 "1234",
                 "8765",
@@ -30,7 +30,7 @@ class Values:
             ]
             self.score = 1
         elif case_type is TestCase.B:
-            self.input = [
+            self.lines = [
                 "...0...",
                 "...1...",
                 "...2...",
@@ -41,7 +41,7 @@ class Values:
             ]
             self.score = 2
         elif case_type is TestCase.C:
-            self.input = [
+            self.lines = [
                 "..90..9",
                 "...1.98",
                 "...2..7",
@@ -52,7 +52,7 @@ class Values:
             ]
             self.score = 4
         elif case_type is TestCase.D:
-            self.input = [
+            self.lines = [
                 "10..9..",
                 "2...8..",
                 "3...7..",
@@ -63,7 +63,7 @@ class Values:
             ]
             self.score = 3
         elif case_type is TestCase.E:
-            self.input = [
+            self.lines = [
                 "89010123",
                 "78121874",
                 "87430965",
@@ -75,15 +75,21 @@ class Values:
             ]
             self.score = 36
 
+        self.map = aoc_10_1.Map.from_lines(self.lines)
+
 
 @pytest.fixture(params=TestCase)
 def values(request):
     return Values(request.param)
 
 
-def test_trails(values):
-    result = aoc_10_1.
-    assert values.
+def test_get_trails(values):
+    trail_heads = aoc_10_1.get_trail_heads(tmap=values.map)
+    for head in trail_heads:
+        trails = aoc_10_1.get_trails(head, values.map)
+        print(trails)
+        continue
+    assert trail_heads
 
 
 def test_main():
