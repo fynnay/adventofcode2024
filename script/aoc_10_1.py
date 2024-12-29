@@ -126,7 +126,7 @@ class Map:
                 continue
             yield node
 
-    def build_trails(self, from_node: Node, visited: set[Node] = None) -> dict[Node, Node or dict]:
+    def build_trails(self, from_node: Node) -> dict[Node, Node or dict]:
         """
         Recursively adds possible trails from the given node.
         Trails may lead to the same peak.
@@ -134,17 +134,11 @@ class Map:
         Returns:
             Dictionary of all possible trails
         """
-        visited = visited or set()
-        if from_node in visited:
-            return {}
-        visited.add(from_node)
         tree: dict[Node, Node or dict] = {}
         directions = self.step_up(from_node, 1)
 
         for direction in directions:
-            if direction in visited:
-                continue
-            trails = self.build_trails(direction, visited=visited)
+            trails = self.build_trails(direction)
             tree[direction] = trails
 
         return tree
