@@ -214,7 +214,8 @@ def main(file_path: Path | None = None):
             part=puzzle_name.part,
         )
     )
-    result = "I am result"
+    tmap = get_input_values(file_path)
+    result = process(tmap)
     return result
 
 
