@@ -15,7 +15,7 @@ MAP = list[list[ELEVATION]]
 TRAIL = list[list["Node"]]
 
 
-@dataclass
+@dataclass(frozen=True, eq=True)
 class Point:
     x: int
     y: int
@@ -126,13 +126,13 @@ class Map:
                 continue
             yield node
 
-    def build_trail(self, previous_node: Node, next_node: Node or Iterator, tree: dict[Node, Node or dict] = None):
-        tree = tree or {}
-        tree.setdefault(previous_node, {})
-        if isinstance(next_node, Node):
-            tree[previous_node] = next_node
-        else:
-            tree[previous_node] = self.build_trail(previous_node, next_node, tree=tree)
+    def build_trail(self, from_node: Node):
+        tree: dict[Node, Node or dict] = {}
+        directions = self.step_up(from_node, 1)
+
+        for direction in directions:
+            # tree.setdefault(from_node, {})
+            tree[direction] = self.build_trail(direction)
 
         return tree
 
