@@ -168,28 +168,6 @@ class Map:
                     visited=visited,
                 )
 
-    def get_trails(self, head: Node) -> list[list[list[Node]]]:
-        """
-        Each head may exponentially grow into a large number of directions with each step.
-        Keep track of each step in a separate list for each direction.
-        Lastly, consolidate all unique trails, that lead to a peak to make
-        clean lists of possible routes to take to each peak.
-        The first item of each trail will be a single step followed by
-        one or more lists of further steps.
-        [
-          head, [step, [...]],
-        ]
-        """
-        # From this point, several directions may be possible
-        directions = self.steps_up(head, 1, max_elevation=9)
-        trails = [head]
-
-        # Store each step
-        for step in directions:
-            trails.append(self.get_trails(step))
-        return trails
-
-
 def get_input_values(file_path: Path) -> Map:
     with open(file_path, 'r') as file:
         lines = file.readlines()
@@ -207,16 +185,16 @@ def process(tmap: Map) -> int:
     Args:
         tmap: The trail map in which to look for trails
     """
-    trail_heads = list(tmap.get_trail_heads())
-    all_trails: list[TRAIL] = []
+    trail_heads = tmap.get_trail_heads()
+    all_peaks: list[set[Node]] = []
 
     for head in trail_heads:
-        trails = tmap.get_trails(head)
-        all_trails.append(trails)
+        peaks = set(tmap.find_peaks(head))
+        all_peaks.append(peaks)
 
     trail_scores = []
 
-    for trail_head in all_trails:
+    for trail_head in all_peaks:
         trail_scores.append(len(trail_head))
 
     trail_score = sum(trail_scores)

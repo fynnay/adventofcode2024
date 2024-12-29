@@ -28,6 +28,9 @@ class Values:
                 "8765",
                 "9876",
             ]
+            self.head_scores = [
+                1,
+            ]
             self.score = 1
         elif case_type is TestCase.B:
             self.lines = [
@@ -38,6 +41,9 @@ class Values:
                 "7.....7",
                 "8.....8",
                 "9.....9",
+            ]
+            self.head_scores = [
+                2,
             ]
             self.score = 2
         elif case_type is TestCase.C:
@@ -50,6 +56,9 @@ class Values:
                 "876....",
                 "987....",
             ]
+            self.head_scores = [
+                4,
+            ]
             self.score = 4
         elif case_type is TestCase.D:
             self.lines = [
@@ -60,6 +69,9 @@ class Values:
                 "...8..3",
                 "...9..2",
                 ".....01",
+            ]
+            self.head_scores = [
+                1, 2,
             ]
             self.score = 3
         elif case_type is TestCase.E:
@@ -73,6 +85,9 @@ class Values:
                 "01329801",
                 "10456732",
             ]
+            self.head_scores = [
+                5, 6, 5, 3, 1, 3, 5, 3, 5
+            ]
             self.score = 36
 
         self.map = aoc_10_1.Map.from_lines(self.lines)
@@ -83,15 +98,22 @@ def values(request):
     return Values(request.param)
 
 
-def test_count_peaks(values):
-    tmap = aoc_10_1.Map.from_lines(values.lines)
+def test_trail_head_scores(values):
+    tmap = values.map
     heads = tmap.get_trail_heads()
-    head_peaks: list[list[aoc_10_1.Node]] = []
+    peaks: list[set[aoc_10_1.Node]] = []
     for head in heads:
-        peaks = set(tmap.find_peaks(head))
-        head_peaks.append(peaks)
-    assert head_peaks
+        peaks.append(set(tmap.find_peaks(head)))
+    head_scores = [
+        len(_) for _ in peaks
+    ]
+    assert head_scores == values.head_scores
 
+
+def test_score(values):
+    tmap = values.map
+    score = aoc_10_1.process(tmap)
+    assert score == values.score
 
 def test_get_trails(values):
     tmap = aoc_10_1.Map.from_lines(values.lines)
