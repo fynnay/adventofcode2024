@@ -50,11 +50,12 @@ class Map:
                 continue
 
             for x, entry in enumerate(line):
-                if not entry.strip("."):
-                    continue
-
                 point = Point(x, y)
-                node = Node(point, int(entry))
+                if entry.isnumeric():
+                    elevation = int(entry)
+                else:
+                    elevation = -1
+                node = Node(point, elevation)
                 nodes_x.append(node)
 
             nodes_y.append(nodes_x)
