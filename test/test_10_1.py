@@ -87,7 +87,7 @@ def test_get_trails(values):
     tmap = aoc_10_1.Map.from_lines(values.lines)
     heads = tmap.get_trail_heads()
     for head in heads:
-        trail = tmap.build_trail(head)
+        trail = tmap.build_trails(head)
         break
     assert trail
 
