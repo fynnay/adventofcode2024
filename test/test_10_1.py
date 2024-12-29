@@ -84,12 +84,13 @@ def values(request):
 
 
 def test_get_trails(values):
-    trail_heads = aoc_10_1.get_trail_heads(tmap=values.map)
-    for head in trail_heads:
-        trails = aoc_10_1.get_trails(head, values.map)
-        print(trails)
-        continue
-    assert trail_heads
+    tmap = aoc_10_1.Map.from_lines(values.lines)
+    heads = tmap.get_trail_heads()
+    all_trails = []
+    for head in heads:
+        trails = tmap.get_trails(head)
+        break
+    assert all_trails
 
 
 def test_main():
