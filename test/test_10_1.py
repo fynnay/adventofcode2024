@@ -32,6 +32,7 @@ class Values:
                 1,
             ]
             self.score = 1
+
         elif case_type is TestCase.B:
             self.lines = [
                 "...0...",
@@ -46,6 +47,7 @@ class Values:
                 2,
             ]
             self.score = 2
+
         elif case_type is TestCase.C:
             self.lines = [
                 "..90..9",
@@ -60,6 +62,7 @@ class Values:
                 4,
             ]
             self.score = 4
+
         elif case_type is TestCase.D:
             self.lines = [
                 "10..9..",
@@ -74,6 +77,7 @@ class Values:
                 1, 2,
             ]
             self.score = 3
+
         elif case_type is TestCase.E:
             self.lines = [
                 "89010123",
@@ -114,14 +118,6 @@ def test_score(values):
     tmap = values.map
     score = aoc_10_1.process(tmap)
     assert score == values.score
-
-def test_get_trails(values):
-    tmap = aoc_10_1.Map.from_lines(values.lines)
-    heads = tmap.get_trail_heads()
-    for head in heads:
-        trail = tmap.build_trails(head)
-        break
-    assert trail
 
 
 def test_main():

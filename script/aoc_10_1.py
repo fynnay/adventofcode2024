@@ -69,6 +69,8 @@ class Map:
                 yield x
 
     def node_at(self, point: Point):
+        if point.x < 0 or point.y < 0:
+            return None
         try:
             node = self._nodes[point.y][point.x]
         except IndexError:
