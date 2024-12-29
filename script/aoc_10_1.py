@@ -144,6 +144,30 @@ class Map:
 
         return tree
 
+    def find_peaks(
+            self,
+            node: Node,
+            peak_elevation: int = 9,
+            visited: set[Node] = None
+    ) -> Iterator[Node]:
+        """
+        Yields Nodes at `peak_elevation` connected to `node`
+        """
+        visited = visited or set()
+        directions = self.step_up(node, 1)
+        for step in directions:
+            # if step in visited:
+            #     continue
+            # visited.add(step)
+            if step.elevation == peak_elevation:
+                yield step
+            else:
+                yield from self.find_peaks(
+                    step,
+                    peak_elevation=peak_elevation,
+                    visited=visited,
+                )
+
     def get_trails(self, head: Node) -> list[list[list[Node]]]:
         """
         Each head may exponentially grow into a large number of directions with each step.

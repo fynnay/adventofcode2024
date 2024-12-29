@@ -83,6 +83,16 @@ def values(request):
     return Values(request.param)
 
 
+def test_count_peaks(values):
+    tmap = aoc_10_1.Map.from_lines(values.lines)
+    heads = tmap.get_trail_heads()
+    head_peaks: list[list[aoc_10_1.Node]] = []
+    for head in heads:
+        peaks = set(tmap.find_peaks(head))
+        head_peaks.append(peaks)
+    assert head_peaks
+
+
 def test_get_trails(values):
     tmap = aoc_10_1.Map.from_lines(values.lines)
     heads = tmap.get_trail_heads()
