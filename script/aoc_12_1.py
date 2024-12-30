@@ -29,7 +29,7 @@ class Region:
     plant: str
     points: list[Point] = field(default_factory=list)
     perimeter: int = -1
-    _border: list[Point] = field(default_factory=list)
+    border: list[Point] = field(default_factory=list)
 
     @property
     def area(self) -> int:
@@ -53,29 +53,19 @@ class Region:
             if _ == point:
                 return _
 
-    def contains(self, region: "Region") -> bool:
-        """
-        Returns True, if `region` is within the outer bounds of this Region.
-        False, if it's not.
-
-        Args:
-            region: Another region
-        """
-        pass
-
     def calculate_perimeter(self):
         """
         Calculates the length of nodes around this area.
         """
-        self._border = []
+        self.border = []
         # Count points around each node, that are not part of this Region
         for point in self.points:
             for direction in Direction:
                 other_point = point + direction.value
                 other = self.point_at(other_point)
                 if other is None:
-                    self._border.append(other_point)
-        self.perimeter = len(self._border)
+                    self.border.append(other_point)
+        self.perimeter = len(self.border)
 
 
 class Direction(Enum):
@@ -175,6 +165,7 @@ def get_input_values(file_path: Path):
         for line in file.readlines():
             if not line:
                 continue
+            values.append([_ for _ in line])
 
     return values
 
@@ -186,8 +177,8 @@ def process(input_values):
     # Calculate border
     for region in regions:
         region.calculate_perimeter()
-    total_cost = 0
-    pass
+    total_cost = sum([_.cost for _ in regions])
+    return total_cost
 
 
 def main(file_path: Path | None = None):

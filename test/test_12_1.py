@@ -4,15 +4,14 @@ from importlib import util
 
 import pytest
 import aoc
-from aoc_12_1 import Node, Region, Point, Land
+import aoc_12_1
+from aoc_12_1 import Region, Point, Land
 
 
 class TestCase(Enum):
     A = "A"
     B = "B"
     C = "C"
-    D = "D"
-    E = "E"
 
 
 class Values:
@@ -78,11 +77,65 @@ class Values:
                     perimeter=8,
                 )
             ]
-            self.perimeter = sum([_.perimeter for _ in self.regions])
-            self.cost = 1
+            self.cost = 140
         elif case_type is TestCase.B:
-            pass
-        self.map = Land.from_lines(self.lines)
+            self.lines = [
+                "OOOOO",
+                "OXOXO",
+                "OOOOO",
+                "OXOXO",
+                "OOOOO",
+            ]
+            self.regions = [
+                Region(
+                    plant="0",
+                    points=[
+                        Point(0, 0), Point(1, 0), Point(2, 0), Point(3, 0), Point(4, 0),
+                        Point(0, 1),              Point(2, 1),              Point(4, 1),
+                        Point(0, 2), Point(1, 2), Point(2, 2), Point(3, 2), Point(4, 2),
+                        Point(0, 3),              Point(2, 3),              Point(4, 3),
+                        Point(0, 4), Point(1, 4), Point(2, 4), Point(3, 4), Point(4, 4),
+                    ],
+                    perimeter=36,
+                ),
+                Region(
+                    plant="X",
+                    points=[Point(1,1)],
+                    perimeter=4,
+                ),
+                Region(
+                    plant="X",
+                    points=[Point(3, 1)],
+                    perimeter=4,
+                ),
+                Region(
+                    plant="X",
+                    points=[Point(1, 3)],
+                    perimeter=4,
+                ),
+                Region(
+                    plant="X",
+                    points=[Point(3, 3)],
+                    perimeter=4,
+                ),
+            ]
+            self.cost = 772
+        elif case_type == TestCase.C:
+            self.lines = [
+                "RRRRIICCFF",
+                "RRRRIICCCF",
+                "VVRRRCCFFF",
+                "VVRCCCJFFF",
+                "VVVVCJJCFE",
+                "VVIVCCJJEE",
+                "VVIIICJJEE",
+                "MIIIIIJJEE",
+                "MIIISIJEEE",
+                "MMMISSJEEE",
+            ]
+            self.cost = 1930
+        self.perimeter = sum([_.perimeter for _ in self.regions])
+        self.land = Land.from_lines(self.lines)
 
 
 @pytest.fixture(params=TestCase)
@@ -90,10 +143,10 @@ def values(request):
     return Values(request.param)
 
 
-def test_regions(values):
+def test_region_points(values):
     land = Land.from_lines(values.lines)
-    regions = land.find_regions()
-    assert values.regions == regions
+    points = [set(_.points) for _ in land.find_regions()]
+    assert [set(_.points) for _ in values.regions] == points
 
 
 def test_perimeter(values):
@@ -104,6 +157,18 @@ def test_perimeter(values):
         perimeter += _.perimeter
     assert perimeter == values.perimeter
 
+
+def test_cost(values):
+    land = Land.from_lines(values.lines)
+    cost = 0
+    for _ in land.find_regions():
+        _.calculate_perimeter()
+        cost += _.cost
+    assert cost == values.cost
+
+def test_process(values):
+    result = aoc_12_1.process(values.lines)
+    assert result == values.cost
 
 def test_main():
     puzzle_name = aoc.PuzzleName(
