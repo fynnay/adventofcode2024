@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Iterator
@@ -7,6 +7,7 @@ from aoc import (
     PuzzleName,
     Dir,
 )
+
 
 @dataclass(frozen=True, eq=True)
 class Point:
@@ -27,11 +28,58 @@ class Node:
 class Region:
     nodes: list[Node]
     plant: str
+    border: list[Point] = field(default_factory=list)
 
     @property
     def area(self) -> int:
+        """
+        Returns the amount of nodes in this region
+        """
         return len(self.nodes)
 
+    @property
+    def perimeter(self) -> int:
+        if not self.border:
+            raise ValueError(f"No border info. Must calculate_border first.")
+        return len(self.border)
+
+    @property
+    def cost(self) -> int:
+        """
+        The area * perimeter = cost
+        """
+        return self.area * self.perimeter
+
+    def node_at(self, point: Point) -> Node or None:
+        """
+        Returns the node if one is found at the `point` or None.
+        """
+        for _ in self.nodes:
+            if _.point == point:
+                return _
+
+    def contains(self, region: "Region") -> bool:
+        """
+        Returns True, if `region` is within the outer bounds of this Region.
+        False, if it's not.
+
+        Args:
+            region: Another region
+        """
+        pass
+
+    def calculate_border(self):
+        """
+        Calculates the length of nodes around this area.
+        """
+        self.border = []
+        # Count points around each node, that are not part of this Region
+        for node in self.nodes:
+            for direction in Direction:
+                point = node.point + direction.value
+                other_node = self.node_at(point)
+                if other_node is None:
+                    self.border.append(point)
 
 
 class Direction(Enum):
@@ -42,11 +90,11 @@ class Direction(Enum):
 
 
 @dataclass
-class Map:
+class Land:
     _nodes: list[list[Node]]
 
     @classmethod
-    def from_lines(cls, lines: list[str]) -> "Map":
+    def from_lines(cls, lines: list[str]) -> "Land":
         nodes_y = []
 
         for y, line in enumerate(lines):
@@ -112,7 +160,11 @@ def get_input_values(file_path: Path):
 
 
 def process(input_values):
-
+    land = Land.from_lines(input_values)
+    # Get regions
+    regions: list[Region] = []
+    # Calculate perimeters
+    total_cost = 0
     pass
 
 
