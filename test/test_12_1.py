@@ -12,6 +12,7 @@ class TestCase(Enum):
     A = "A"
     B = "B"
     C = "C"
+    D = "D"
 
 
 class Values:
@@ -134,6 +135,34 @@ class Values:
                 "MMMISSJEEE",
             ]
             self.cost = 1930
+        elif case_type == TestCase.D:
+            self.lines = [
+                "XO",
+                "OX",
+            ]
+            self.regions = [
+                Region(
+                    plant="X",
+                    points=[Point(0, 0)],
+                    perimeter=4,
+                ),
+                Region(
+                    plant="O",
+                    points=[Point(1, 0)],
+                    perimeter=4,
+                ),
+                Region(
+                    plant="O",
+                    points=[Point(0, 1)],
+                    perimeter=4,
+                ),
+                Region(
+                    plant="X",
+                    points=[Point(1, 1)],
+                    perimeter=4,
+                ),
+            ]
+            self.cost = 16
         self.perimeter = sum([_.perimeter for _ in self.regions])
         self.land = Land.from_lines(self.lines)
 
@@ -170,6 +199,8 @@ def test_process(values):
     result = aoc_12_1.process(values.lines)
     assert result == values.cost
 
+
+# @pytest.mark.skip
 def test_main():
     puzzle_name = aoc.PuzzleName(
         day=12,
