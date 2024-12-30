@@ -18,8 +18,9 @@ class TestCase(Enum):
 class Values:
     def __init__(self, case_type: TestCase):
         self.case_type = case_type
-        self.regions: list[Region] = []
         self.lines: list[list[str]] = []
+        self.regions: list[Region] = []
+        self.perimeter: int = 0
         self.cost: int = 0
 
         if case_type is TestCase.A:
@@ -37,7 +38,8 @@ class Values:
                         Point(1, 0),
                         Point(2, 0),
                         Point(3, 0),
-                    ]
+                    ],
+                    perimeter=10,
                 ),
                 Region(
                     plant="B",
@@ -46,7 +48,8 @@ class Values:
                         Point(0, 2),
                         Point(1, 2),
                         Point(1, 1),
-                    ]
+                    ],
+                    perimeter=8,
                 ),
                 Region(
                     plant="C",
@@ -55,13 +58,15 @@ class Values:
                         Point(2, 2),
                         Point(3, 2),
                         Point(3, 3),
-                    ]
+                    ],
+                    perimeter=10,
                 ),
                 Region(
                     plant="D",
                     points=[
                         Point(3, 1),
-                    ]
+                    ],
+                    perimeter=4,
                 ),
                 Region(
                     plant="E",
@@ -69,9 +74,11 @@ class Values:
                         Point(0, 3),
                         Point(1, 3),
                         Point(2, 3),
-                    ]
+                    ],
+                    perimeter=8,
                 )
             ]
+            self.perimeter = sum([_.perimeter for _ in self.regions])
             self.cost = 1
         elif case_type is TestCase.B:
             pass
@@ -87,6 +94,16 @@ def test_regions(values):
     land = Land.from_lines(values.lines)
     regions = land.find_regions()
     assert values.regions == regions
+
+
+def test_perimeter(values):
+    land = Land.from_lines(values.lines)
+    perimeter = 0
+    for _ in land.find_regions():
+        _.calculate_perimeter()
+        perimeter += _.perimeter
+    assert perimeter == values.perimeter
+
 
 def test_main():
     puzzle_name = aoc.PuzzleName(

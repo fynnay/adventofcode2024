@@ -28,7 +28,8 @@ class Node:
 class Region:
     plant: str
     points: list[Point] = field(default_factory=list)
-    border: list[Point] = field(default_factory=list)
+    perimeter: int = -1
+    _border: list[Point] = field(default_factory=list)
 
     @property
     def area(self) -> int:
@@ -36,12 +37,6 @@ class Region:
         Returns the amount of nodes in this region
         """
         return len(self.points)
-
-    @property
-    def perimeter(self) -> int:
-        if not self.border:
-            raise ValueError(f"No border info. Must calculate_border first.")
-        return len(self.border)
 
     @property
     def cost(self) -> int:
@@ -68,18 +63,19 @@ class Region:
         """
         pass
 
-    def calculate_border(self):
+    def calculate_perimeter(self):
         """
         Calculates the length of nodes around this area.
         """
-        self.border = []
+        self._border = []
         # Count points around each node, that are not part of this Region
         for point in self.points:
             for direction in Direction:
-                point = point + direction.value
-                other_node = self.point_at(point)
-                if other_node is None:
-                    self.border.append(point)
+                other_point = point + direction.value
+                other = self.point_at(other_point)
+                if other is None:
+                    self._border.append(other_point)
+        self.perimeter = len(self._border)
 
 
 class Direction(Enum):
@@ -186,8 +182,10 @@ def get_input_values(file_path: Path):
 def process(input_values):
     land = Land.from_lines(input_values)
     # Get regions
-    regions: list[Region] = []
-    # Calculate perimeters
+    regions: list[Region] = land.find_regions()
+    # Calculate border
+    for region in regions:
+        region.calculate_perimeter()
     total_cost = 0
     pass
 
