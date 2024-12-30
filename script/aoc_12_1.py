@@ -24,10 +24,10 @@ class Node:
     plant: str
 
 
-@dataclass
+@dataclass(eq=True)
 class Region:
-    nodes: list[Node]
     plant: str
+    points: list[Point] = field(default_factory=list)
     border: list[Point] = field(default_factory=list)
 
     @property
@@ -35,7 +35,7 @@ class Region:
         """
         Returns the amount of nodes in this region
         """
-        return len(self.nodes)
+        return len(self.points)
 
     @property
     def perimeter(self) -> int:
@@ -50,12 +50,12 @@ class Region:
         """
         return self.area * self.perimeter
 
-    def node_at(self, point: Point) -> Node or None:
+    def point_at(self, point: Point) -> Node or None:
         """
         Returns the node if one is found at the `point` or None.
         """
-        for _ in self.nodes:
-            if _.point == point:
+        for _ in self.points:
+            if _ == point:
                 return _
 
     def contains(self, region: "Region") -> bool:
@@ -74,10 +74,10 @@ class Region:
         """
         self.border = []
         # Count points around each node, that are not part of this Region
-        for node in self.nodes:
+        for point in self.points:
             for direction in Direction:
-                point = node.point + direction.value
-                other_node = self.node_at(point)
+                point = point + direction.value
+                other_node = self.point_at(point)
                 if other_node is None:
                     self.border.append(point)
 
@@ -127,26 +127,50 @@ class Land:
         else:
             return node
 
-    def step_up(
+    def next_node(
             self,
             node: Node,
-            plant: str
     ) -> Iterator[Node]:
         """
         Returns a list of Nodes, whose elevation is exactly `gain` higher than `node`
 
         Args:
             node: Find next step(s) from this node
-            plant: Elevation of next node(s) should be this much higher
         """
         for direction in Direction:
             point = node.point + direction.value
             next_node = self.node_at(point)
             if not next_node:
                 continue
-            if next_node.plant == plant:
+            if next_node.plant == node.plant:
                 yield next_node
 
+    def get_connected_nodes(
+            self,
+            node: Node,
+            visited: set[Node] = None
+            ) -> Iterator[Node]:
+        visited = visited or {node}
+        yield node
+        for step in self.next_node(node):
+            if step in visited:
+                continue
+            visited.add(step)
+            yield from self.get_connected_nodes(step, visited=visited)
+
+    def find_regions(self) -> list[Region]:
+        regions = []
+
+        processed = set()
+        for node in self.nodes:
+            if node in processed:
+                continue
+            connected_nodes = list(self.get_connected_nodes(node))
+            region = Region(node.plant, points=[_.point for _ in connected_nodes])
+            regions.append(region)
+            processed.update(connected_nodes)
+
+        return regions
 
 def get_input_values(file_path: Path):
     values = []
