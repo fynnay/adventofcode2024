@@ -165,7 +165,7 @@ def get_input_values(file_path: Path):
         for line in file.readlines():
             if not line:
                 continue
-            values.append([_ for _ in line])
+            values.append([_ for _ in line.strip("\n") if _])
 
     return values
 
