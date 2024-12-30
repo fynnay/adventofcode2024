@@ -13,6 +13,12 @@ class TestCase(Enum):
     B = "B"
     C = "C"
     D = "D"
+    E = "E"
+    F = "F"
+    G = "G"
+    H = "H"
+    I = "I"
+    J = "J"
 
 
 class Values:
@@ -163,6 +169,59 @@ class Values:
                 ),
             ]
             self.cost = 16
+        elif case_type == TestCase.E:
+            self.lines = [
+                "XXOXOXX",
+                "XOOOOOX",
+                "OOXOXOO",
+                "XOOXOOX",
+                "OOXOXOO",
+                "XOOOOOX",
+                "XXOXOXX",
+            ]
+            self.cost = 1700
+        elif case_type == TestCase.F:
+            self.lines = [
+                "----",
+                "-OOO",
+                "-O-O",
+                "OO-O",
+                "-OOO",
+            ]
+            self.cost = 342
+        elif case_type == TestCase.G:
+            self.lines = [
+                "----",
+                "OOO-",
+                "O-O-",
+                "O-OO",
+                "OOO-",
+            ]
+            self.cost = 342
+        elif case_type == TestCase.H:
+            self.lines = [
+                "AXAA",
+                "XAAA",
+                "XAAA",
+                "XAAA",
+            ]
+            self.cost = 186
+        elif case_type == TestCase.I:
+            self.lines = [
+                "AAAA",
+                "ABCA",
+                "ABCA",
+                "AAAD",
+            ]
+            self.cost = 292
+        elif case_type == TestCase.J:
+            self.lines = [
+                "AAAA",
+                "ABCA",
+                "ABCA",
+                "AAAA",
+            ]
+            self.cost = 312
         self.perimeter = sum([_.perimeter for _ in self.regions])
         self.land = Land.from_lines(self.lines)
 
