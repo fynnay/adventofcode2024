@@ -1,13 +1,35 @@
 import sys
+from enum import Enum
 from importlib import util
 
 import pytest
 import aoc
 
 
-@pytest.fixture
-def something():
-    return
+class Case(Enum):
+    A = "A"
+    B = "B"
+    C = "C"
+    D = "D"
+
+
+class Values:
+    def __init__(self, case: Case):
+        self.value_1 = None
+        self.value_2 = None
+
+        if case is Case.A:
+            self.value_1 = 1
+            self.value_2 = 2
+
+
+@pytest.fixture(params=Case)
+def values(request):
+    return Values(request.param)
+
+
+def test_something(values):
+    assert values.value_1 == values.value_2
 
 
 def test_main():
