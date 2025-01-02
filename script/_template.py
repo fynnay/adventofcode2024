@@ -17,6 +17,10 @@ def get_input_values(file_path: Path):
     return values
 
 
+def process(input_values):
+    return None
+
+
 def main(file_path: Path | None = None):
     script_path = Path(__file__)
     puzzle_name = PuzzleName.parse(script_path.stem)
@@ -27,7 +31,8 @@ def main(file_path: Path | None = None):
             part=puzzle_name.part,
         )
     )
-    result = "I am result"
+    input_values = get_input_values(file_path)
+    result = process(input_values)
     return result
 
 
