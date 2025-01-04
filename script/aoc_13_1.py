@@ -65,39 +65,45 @@ def find_lowest_divisor(n: int, a: int, b: int, limit: int = 100) -> tuple[int, 
     return x, y
 
 
-def calc_claw_machine_winning_moves(claw_machine: ClawMachine) -> tuple[int, int]:
+def calc_claw_machine_winning_moves(claw_machine: ClawMachine) -> list[tuple[int, int]]:
     # Find the largest position
     xy_srcs = [claw_machine.a, claw_machine.b]
     x_sum = sum([_[0] for _ in xy_srcs])
-    y_sum = sum([_[0] for _ in xy_srcs])
+    y_sum = sum([_[1] for _ in xy_srcs])
     xy_sum = [x_sum, y_sum]
     index_max = xy_sum.index(max(x_sum, y_sum))
-    index_inv = xy_sum[len(xy_sum) - 1 - index_max]
+    index_inv = len(xy_sum) - 1 - index_max
+    indexes = [index_max, index_inv]
 
-    prize = claw_machine.prize[index_max]
-    src_a = claw_machine.a[index_max]
-    src_b = claw_machine.b[index_max]
-    ab_min = min(src_a, src_b)
-    ab_max = max(src_a, src_b)
-    ab_lst = [ab_min, ab_max]
-    a_index = ab_lst.index(src_a)
-    b_index = ab_lst.index(src_b)
-    divisor = find_lowest_divisor(
-        prize,
-        ab_min,
-        ab_max,
-    )
-    x = divisor[a_index]
-    y = divisor[b_index]
+    values = []
 
-    return x, y
+    for _ in range(2):
+        index = indexes[_]
+        prize = claw_machine.prize[index]
+        src_a = claw_machine.a[index]
+        src_b = claw_machine.b[index]
+        ab_min = min(src_a, src_b)
+        ab_max = max(src_a, src_b)
+        ab_lst = [ab_min, ab_max]
+        a_index = ab_lst.index(src_a)
+        b_index = ab_lst.index(src_b)
+        divisor = find_lowest_divisor(
+            prize,
+            ab_min,
+            ab_max,
+        )
+        x = divisor[a_index]
+        y = divisor[b_index]
+        values.append((x, y))
+
+    return values
 
 
 def process(input_values) -> tuple[int, int]:
     a = input_values[0]
     b = input_values[1]
     prize = input_values[2]
-    x, y = 0, 0
+    a, b = 0, 0
     xs, ys = [], []
     for _ in range(2):
         a_value = a[0]
@@ -112,12 +118,12 @@ def process(input_values) -> tuple[int, int]:
             ab_min,
             ab_max,
         )
-        x = divisor[a_index]
-        y = divisor[b_index]
-        xs.append(x)
-        ys.append(y)
+        a = divisor[a_index]
+        b = divisor[b_index]
+        xs.append(a)
+        ys.append(b)
 
-    return x, y
+    return a, b
 
 
 def main(file_path: Path | None = None):
