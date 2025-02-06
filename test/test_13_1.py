@@ -59,7 +59,7 @@ def values(request):
 def test_calc_claw_machine_winning_moves(values):
 
     def run():
-        return aoc_13_1.calc_claw_machine_winning_moves(
+        return aoc_13_1.calc_claw_machine_moves(
             values.claw_machine
         )
 

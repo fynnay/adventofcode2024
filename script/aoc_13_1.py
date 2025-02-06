@@ -65,7 +65,7 @@ def find_lowest_divisor(n: int, a: int, b: int, limit: int = 100) -> tuple[int, 
     return x, y
 
 
-def calc_claw_machine_winning_moves(claw_machine: ClawMachine) -> list[tuple[int, int]]:
+def calc_claw_machine_moves(claw_machine: ClawMachine) -> list[tuple[int, int]]:
     # Find the largest position
     xy_srcs = [claw_machine.a, claw_machine.b]
     x_sum = sum([_[0] for _ in xy_srcs])
@@ -99,31 +99,9 @@ def calc_claw_machine_winning_moves(claw_machine: ClawMachine) -> list[tuple[int
     return values
 
 
-def process(input_values) -> tuple[int, int]:
-    a = input_values[0]
-    b = input_values[1]
-    prize = input_values[2]
-    a, b = 0, 0
-    xs, ys = [], []
-    for _ in range(2):
-        a_value = a[0]
-        b_value = b[0]
-        ab_min = min(a_value, b_value)
-        ab_max = max(a_value, b_value)
-        ab_lst = [ab_min, ab_max]
-        a_index = ab_lst.index(a_value)
-        b_index = ab_lst.index(b_value)
-        divisor = find_lowest_divisor(
-            prize[_],
-            ab_min,
-            ab_max,
-        )
-        a = divisor[a_index]
-        b = divisor[b_index]
-        xs.append(a)
-        ys.append(b)
-
-    return a, b
+def process(input_values: list[ClawMachine]) -> tuple[int, int]:
+    for _ in input_values:
+        winning_moves = calc_claw_machine_moves(_)
 
 
 def main(file_path: Path | None = None):
